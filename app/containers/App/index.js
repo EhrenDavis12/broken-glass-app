@@ -7,22 +7,62 @@
  *
  */
 
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { Component } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
 
-import HomePage from 'containers/HomePage/Loadable';
-import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import HomePage from "containers/HomePage/Loadable";
+import NotFoundPage from "containers/NotFoundPage/Loadable";
+import Profile from "containers/EhrensPlayGround/Profile";
+import Nav from "containers/EhrensPlayGround/Nav";
+import Public from "containers/EhrensPlayGround/Public";
+import Auth from "containers/Auth/Auth";
+import Callback from "containers/EhrensPlayGround/Callback";
 
-import GlobalStyle from '../../global-styles';
+import GlobalStyle from "../../global-styles";
 
-export default function App() {
-  return (
-    <div>
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route component={NotFoundPage} />
-      </Switch>
-      <GlobalStyle />
-    </div>
-  );
+//export default function App() {
+class App extends Component {
+	constructor(props) {
+		super(props);
+		this.auth = new Auth(this.props.history);
+	}
+
+	render() {
+		const { isAuthenticated } = this.auth;
+		return (
+			<div>
+				<Nav auth={this.auth} />
+				<div className="body">
+					<Switch>
+						<Route
+							exact
+							path="/"
+							render={props => <HomePage auth={this.auth} {...props} />}
+						/>
+						<Route
+							exact
+							path="/callback"
+							render={props => <Callback auth={this.auth} {...props} />}
+						/>
+						<Route
+							exact
+							path="/profile"
+							render={props =>
+								isAuthenticated() ? (
+									<Profile auth={this.auth} {...props} />
+								) : (
+									<Redirect to="/" />
+								)
+							}
+						/>
+						<Route path="/api/v1/public" component={Public} />
+						<Route component={NotFoundPage} />
+					</Switch>
+					<GlobalStyle />
+				</div>
+			</div>
+		);
+	}
 }
+
+export default App;
