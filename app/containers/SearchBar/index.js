@@ -10,11 +10,12 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
+import { Link } from 'react-router-dom'
 
-import {changeCurrentSearch} from './actions';
+import { changeCurrentSearch } from './actions';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import {makeSelectSearchBar, makeSelectSearch} from './selectors';
+import { makeSelectSearchBar, makeSelectSearch } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import Button from "components/Button/index.js";
@@ -23,30 +24,30 @@ import messages from './messages';
 
 /* eslint-disable react/prefer-stateless-function */
 export class SearchBar extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     //this.state = {searchValue: props.currentSearch}
   }
 
-  componentDidMount(){
-    
+  componentDidMount() {
+
   }
 
-  TextChange = (event)=>{
+  TextChange = (event) => {
     //this.setState({searchValue: event.target.value});
     dispatch(setCurrentSearch(event.target.value));
   }
 
 
   render() {
-    const {currentSearch, onChangeCurrentSearch} = this.props;
+    const { currentSearch, onChangeCurrentSearch } = this.props;
     return (
       <div>
-        <TextBox 
-          handelInputChange={onChangeCurrentSearch} 
-          PlaceHolder={<FormattedMessage {...messages.searchLabel} 
-          TextValue={currentSearch}/>} />
-        <Button message={<FormattedMessage {...messages.button} />} />
+        <TextBox
+          handelInputChange={onChangeCurrentSearch}
+          PlaceHolder={<FormattedMessage {...messages.searchLabel}
+            TextValue={currentSearch} />} />
+        <Link to='/results'> <Button message={<FormattedMessage {...messages.button} />} /> </Link>
       </div>
     );
   }
@@ -69,8 +70,8 @@ function mapDispatchToProps(dispatch) {
     onChangeCurrentSearch: evt => dispatch(changeCurrentSearch(evt.target.value)),
     dispatch,
     onClickButton: evt => {
-      if(evt !== undefined && evt.preventDefault) evt.preventDefault();
-      
+      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+
     }
   };
 }
