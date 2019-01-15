@@ -61,7 +61,7 @@ class App extends Component {
 							exact
 							path="/api/v1/private"
 							render={props =>
-								this.isAuthenticated() ? (
+								isAuthenticated() ? (
 									<Private auth={this.auth} {...props} />
 								) : (
 									this.auth.login()
