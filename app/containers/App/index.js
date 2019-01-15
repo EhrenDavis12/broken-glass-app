@@ -60,7 +60,13 @@ class App extends Component {
 						<Route
 							exact
 							path="/api/v1/private"
-							render={props => <Private auth={this.auth} {...props} />}
+							render={props =>
+								this.isAuthenticated() ? (
+									<Private auth={this.auth} {...props} />
+								) : (
+									this.auth.login()
+								)
+							}
 						/>
 						<Route component={NotFoundPage} />
 					</Switch>
