@@ -133,6 +133,12 @@ module.exports = options => ({
 				REACT_APP_AUTH0_CALLBACK_URL: JSON.stringify(
 					process.env.REACT_APP_AUTH0_CALLBACK_URL
 				),
+				REACT_APP_AUTH0_AUDIENCE: JSON.stringify(
+					process.env.REACT_APP_AUTH0_AUDIENCE
+				),
+				REACT_APP_AUTH0_API_URL: JSON.stringify(
+					process.env.REACT_APP_AUTH0_API_URL
+				),
 				REACT_APP_API_URL: JSON.stringify(process.env.REACT_APP_API_URL),
 				REACT_APP_URL: JSON.stringify(process.env.REACT_APP_URL)
 			}

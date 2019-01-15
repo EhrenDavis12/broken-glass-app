@@ -15,6 +15,7 @@ import NotFoundPage from "containers/NotFoundPage/Loadable";
 import Profile from "containers/EhrensPlayGround/Profile";
 import Nav from "containers/EhrensPlayGround/Nav";
 import Public from "containers/EhrensPlayGround/Public";
+import Private from "containers/EhrensPlayGround/Private";
 import Auth from "containers/Auth/Auth";
 import Callback from "containers/EhrensPlayGround/Callback";
 
@@ -56,6 +57,11 @@ class App extends Component {
 							}
 						/>
 						<Route path="/api/v1/public" component={Public} />
+						<Route
+							exact
+							path="/api/v1/private"
+							render={props => <Private auth={this.auth} {...props} />}
+						/>
 						<Route component={NotFoundPage} />
 					</Switch>
 					<GlobalStyle />
