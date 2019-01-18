@@ -11,13 +11,16 @@ import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
+import Button from 'components/Button/index';
+import RatingBox from "components/RatingBox/index";
+import Modal from "components/Modal/index";
 import RatingBar from "components/RatingBar/index";
 import RateTag from "components/RateTag/index";
-import { Star } from "components/Star/index";
 import SearchBar from "containers/SearchBar/Loadable";
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import makeSelectResultPage from './selectors';
+import { toggleModal } from "./actions";
+import { makeSelectResultPage, makeToggleModal } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
@@ -27,6 +30,7 @@ export class ResultPage extends React.Component {
 
 
   render() {
+    const { showModal, onToggleModal } = this.props;
     return (
       <div>
         <nav className="nav">
@@ -41,17 +45,16 @@ export class ResultPage extends React.Component {
           <hr />
           <h1>Store Name!!!</h1>
           <RatingBar />
+          <Button 
+          onClick={this.props.onToggleModal} 
+          toggle={this.props.showModal}> 
+            Rate Yourself
+          </Button>
           <button className="button button-sm button-primary">Rate Yourself</button>
-
-          <form className="border p-2">
-            <RateTag Label='Job Types '/>
-            <RateTag Label='Pay Types '/>
-            <RateTag Label='Average Shift $ '/>
-            <RateTag Label='Management '/>
-            <RateTag Label='Busy '/>
-            <RateTag Label='Customers '/>
-            <RateTag Label='Over All '/>
-          </form>
+          
+          <Modal onClick={onToggleModal} ShowModal={showModal}> <RatingBox ReadOnly={false} /></Modal>
+          {/*We will have to decide here as to if they are logged on to loop through them all or just display one.*/}
+          <RatingBox ReadOnly={true} />
         </div>
       </div>
     );
@@ -60,14 +63,20 @@ export class ResultPage extends React.Component {
 
 ResultPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  showModal: PropTypes.bool,
+  onToggleModal: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
   resultPage: makeSelectResultPage(),
+  showModal: makeToggleModal(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
+    onToggleModal: evt => {
+      dispatch(toggleModal(evt.target.dataset.toggle === "true" ? false : true))
+    },
     dispatch,
   };
 }

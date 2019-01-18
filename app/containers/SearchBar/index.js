@@ -40,14 +40,15 @@ export class SearchBar extends React.Component {
 
 
   render() {
-    const { currentSearch, onChangeCurrentSearch } = this.props;
+    const { currentSearch, onChangeCurrentSearch, onClickButton } = this.props;
+    const {button} = {...messages};
     return (
       <div>
         <TextBox
           handelInputChange={onChangeCurrentSearch}
           PlaceHolder={<FormattedMessage {...messages.searchLabel}
             TextValue={currentSearch} />} />
-        <Link to='/results'> <Button message={<FormattedMessage {...messages.button} />} /> </Link>
+        <Button href='/results' handleRoute={onClickButton}>{button.defaultMessage}</Button>
       </div>
     );
   }
@@ -71,7 +72,7 @@ function mapDispatchToProps(dispatch) {
     dispatch,
     onClickButton: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-
+      //window.location.replace("/results");
     }
   };
 }

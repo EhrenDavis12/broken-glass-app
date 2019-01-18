@@ -8,9 +8,8 @@ import { initialState } from './reducer';
 const selectResultPageDomain = state =>
   state.get('resultPage', initialState);
 
-/**
- * Other specific selectors
- */
+const makeToggleModal = () =>
+  createSelector(selectResultPageDomain, showModal => showModal.get('ShowModal'))
 
 /**
  * Default selector used by ResultPage
@@ -20,4 +19,4 @@ const makeSelectResultPage = () =>
   createSelector(selectResultPageDomain, substate => substate.toJS());
 
 export default makeSelectResultPage;
-export { selectResultPageDomain };
+export { selectResultPageDomain, makeToggleModal,makeSelectResultPage };

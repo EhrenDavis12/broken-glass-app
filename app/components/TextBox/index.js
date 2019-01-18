@@ -14,7 +14,7 @@ import messages from './messages';
 function TextBox(props) {
   let placeHolder = props.PlaceHolder.props;
   return (
-    <label className='mr-2'>{props.Text} <input type='text' className="border border-info" onChange={props.handelInputChange} placeholder={placeHolder.defaultMessage} defaultValue={placeHolder.TextValue} /> {console.log(props)}</label>
+    <label className='mr-2'>{props.Text} <input type='text' className="border border-info" onChange={props.handelInputChange} placeholder={placeHolder.defaultMessage} defaultValue={placeHolder.TextValue} /></label>
    
   );
 }
