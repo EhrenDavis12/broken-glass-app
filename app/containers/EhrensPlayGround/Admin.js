@@ -1,17 +1,19 @@
 import React, { Component } from "react";
 
-class Private extends Component {
+class Admin extends Component {
 	state = {
 		message: ""
 	};
 	componentDidMount() {
 		try {
 			const accessToken = this.props.auth.getAccessToken();
-			fetch(`${process.env.REACT_APP_API_URL}/api/v1/private`, {
+			fetch(`${process.env.REACT_APP_API_URL}/api/v1/admin`, {
 				headers: { Authorization: `Bearer ${accessToken}` }
 			})
 				.then(response => {
 					if (response.ok) return response.json();
+					debugger;
+					this.setState({ message: response.statusText });
 					throw new Error("Network response was not ok.");
 				})
 				.then(response => {
@@ -26,4 +28,4 @@ class Private extends Component {
 	}
 }
 
-export default Private;
+export default Admin;

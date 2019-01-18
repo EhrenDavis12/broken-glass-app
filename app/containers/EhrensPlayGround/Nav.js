@@ -4,7 +4,13 @@ import "containers/EhrensPlayGround/index.css";
 
 class Nav extends Component {
 	render() {
-		const { isAuthenticated, login, logout } = this.props.auth;
+		const {
+			isAuthenticated,
+			userHasScopes,
+			userHasRole,
+			login,
+			logout
+		} = this.props.auth;
 		return (
 			<nav>
 				<ul>
@@ -20,6 +26,16 @@ class Nav extends Component {
 					{isAuthenticated() && (
 						<li>
 							<Link to="/api/v1/private">Private</Link>
+						</li>
+					)}
+					{isAuthenticated() && userHasScopes(["read:review"]) && (
+						<li>
+							<Link to="/api/v1/review">Review</Link>
+						</li>
+					)}
+					{isAuthenticated() && userHasRole(["admin"]) && (
+						<li>
+							<Link to="/api/v1/admin">Admin</Link>
 						</li>
 					)}
 					<li>
