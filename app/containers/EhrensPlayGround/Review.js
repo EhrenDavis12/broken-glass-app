@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 
-class Private extends Component {
+class Review extends Component {
 	state = {
 		message: ""
 	};
 	componentDidMount() {
 		try {
 			const accessToken = this.props.auth.getAccessToken();
-			fetch(`${process.env.REACT_APP_API_URL}/api/v1/private`, {
+			fetch(`${process.env.REACT_APP_API_URL}/api/v1/review`, {
 				headers: { Authorization: `Bearer ${accessToken}` }
 			})
 				.then(response => {
@@ -26,4 +26,4 @@ class Private extends Component {
 	}
 }
 
-export default Private;
+export default Review;

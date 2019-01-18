@@ -16,7 +16,12 @@ import Profile from "containers/EhrensPlayGround/Profile";
 import Nav from "containers/EhrensPlayGround/Nav";
 import Public from "containers/EhrensPlayGround/Public";
 import Private from "containers/EhrensPlayGround/Private";
-import Auth from "containers/Auth/Auth";
+import Review from "containers/EhrensPlayGround/Review";
+import Admin from "containers/EhrensPlayGround/Admin";
+import Auth from "containers/Auth/SilentAuth";
+import PrivateRoute from "containers/Auth/PrivateRoute";
+import PublicRoute from "containers/Auth/PublicRoute";
+import AuthContext from "containers/Auth/AuthContext";
 import Callback from "containers/EhrensPlayGround/Callback";
 
 import GlobalStyle from "../../global-styles";
@@ -25,54 +30,43 @@ import GlobalStyle from "../../global-styles";
 class App extends Component {
 	constructor(props) {
 		super(props);
-		this.auth = new Auth(this.props.history);
+		this.state = {
+			auth: new Auth(this.props.history),
+			tokenRenewalComplete: false
+		};
+	}
+
+	componentDidMount() {
+		this.state.auth.renewToken(() =>
+			this.setState({ tokenRenewalComplete: true })
+		);
 	}
 
 	render() {
-		const { isAuthenticated } = this.auth;
+		const { auth } = this.state;
+		if (!this.state.tokenRenewalComplete) return "Loading...";
 		return (
-			<div>
-				<Nav auth={this.auth} />
+			<AuthContext.Provider value={auth}>
+				<PublicRoute component={Nav} />
 				<div className="body">
 					<Switch>
-						<Route
-							exact
-							path="/"
-							render={props => <HomePage auth={this.auth} {...props} />}
-						/>
-						<Route
-							exact
-							path="/callback"
-							render={props => <Callback auth={this.auth} {...props} />}
-						/>
-						<Route
-							exact
-							path="/profile"
-							render={props =>
-								isAuthenticated() ? (
-									<Profile auth={this.auth} {...props} />
-								) : (
-									<Redirect to="/" />
-								)
-							}
-						/>
+						<PublicRoute exact path="/" component={HomePage} />
+						<PublicRoute exact path="/callback" component={Callback} />
+						<PrivateRoute exact path="/profile" component={Profile} />
 						<Route path="/api/v1/public" component={Public} />
-						<Route
+						<PrivateRoute exact path="/api/v1/private" component={Private} />
+						<PrivateRoute
 							exact
-							path="/api/v1/private"
-							render={props =>
-								isAuthenticated() ? (
-									<Private auth={this.auth} {...props} />
-								) : (
-									this.auth.login()
-								)
-							}
+							path="/api/v1/review"
+							component={Review}
+							scopes={["read:review"]}
 						/>
+						<PrivateRoute exact path="/api/v1/admin" component={Admin} />
 						<Route component={NotFoundPage} />
 					</Switch>
 					<GlobalStyle />
 				</div>
-			</div>
+			</AuthContext.Provider>
 		);
 	}
 }

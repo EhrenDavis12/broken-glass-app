@@ -2,6 +2,12 @@ import auth0 from "auth0-js";
 
 const REDIRECT_ON_LOGIN = "redirect_on_login";
 
+let _idToken = null;
+let _accessToken = null;
+let _scopes = null;
+let _roles = null;
+let _expiresAt = null;
+
 export default class Auth {
 	constructor(history) {
 		this.history = history;
@@ -15,7 +21,7 @@ export default class Auth {
 			audience: process.env.REACT_APP_AUTH0_AUDIENCE,
 			responseType: "token id_token",
 			scope: this.requestedScopes,
-			roles: "unverified"
+			role: "unverified"
 		});
 	}
 
@@ -47,34 +53,23 @@ export default class Auth {
 
 	setSession = authResult => {
 		/* console.log(authResult); */
-		const expiresAt = JSON.stringify(
-			authResult.expiresIn * 1000 + new Date().getTime()
-		);
-		const scopes = authResult.scope || this.requestedScopes || "";
-		const roles =
+		_expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
+
+		_scopes = authResult.scope || this.requestedScopes || "";
+		_roles =
 			authResult.idTokenPayload[`${process.env.REACT_APP_URL}/roles`] === undefined
 				? "unverified"
 				: authResult.idTokenPayload[`${process.env.REACT_APP_URL}/roles`].join(" ");
-		localStorage.setItem("access_token", authResult.accessToken);
-		localStorage.setItem("id_token", authResult.idToken);
-		localStorage.setItem("expires_at", expiresAt);
-		localStorage.setItem("scopes", JSON.stringify(scopes));
-		localStorage.setItem("roles", JSON.stringify(roles));
+		_accessToken = authResult.accessToken;
+		_idToken = authResult.idToken;
 		this.scheduleTokenRenewal();
 	};
 
 	isAuthenticated = () => {
-		const expiresAt = JSON.parse(localStorage.getItem("expires_at"));
-		return new Date().getTime() < expiresAt;
+		return new Date().getTime() < _expiresAt;
 	};
 
 	logout = () => {
-		localStorage.removeItem("access_token");
-		localStorage.removeItem("id_token");
-		localStorage.removeItem("expires_at");
-		localStorage.removeItem("scopes");
-		localStorage.removeItem("roles");
-		this.userProfile = null;
 		this.auth0.logout({
 			clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
 			returnTo: process.env.REACT_APP_URL
@@ -82,19 +77,17 @@ export default class Auth {
 	};
 
 	getAccessToken = () => {
-		const accessToken = localStorage.getItem("access_token");
-		if (!accessToken) {
+		if (!_accessToken) {
 			throw new Error("Not Authorized!");
 		}
-		return accessToken;
+		return _accessToken;
 	};
 
 	getIdToken = () => {
-		const idToken = localStorage.getItem("id_token");
-		if (!idToken) {
+		if (!_idToken) {
 			throw new Error("Not Authorized!");
 		}
-		return idToken;
+		return _idToken;
 	};
 
 	getProfile = cd => {
@@ -106,16 +99,12 @@ export default class Auth {
 	};
 
 	userHasScopes = scopes => {
-		const grantedScopes = (
-			JSON.parse(localStorage.getItem("scopes")) || ""
-		).split(" ");
+		const grantedScopes = (_scopes || "").split(" ");
 		return scopes.every(scope => grantedScopes.includes(scope));
 	};
 
 	userHasRole = roles => {
-		const grantedRoles = (JSON.parse(localStorage.getItem("roles")) || "").split(
-			" "
-		);
+		const grantedRoles = (_roles || "").split(" ");
 		return roles.every(role => grantedRoles.includes(role));
 	};
 
@@ -131,8 +120,7 @@ export default class Auth {
 	};
 
 	scheduleTokenRenewal() {
-		const expiresAt = JSON.parse(localStorage.getItem("expires_at"));
-		const delay = expiresAt - Date.now();
+		const delay = _expiresAt - Date.now();
 		if (delay > 0) setTimeout(() => this.renewToken(), delay);
 	}
 }
