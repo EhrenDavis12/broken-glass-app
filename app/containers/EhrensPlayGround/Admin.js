@@ -12,7 +12,6 @@ class Admin extends Component {
 			})
 				.then(response => {
 					if (response.ok) return response.json();
-					debugger;
 					this.setState({ message: response.statusText });
 					throw new Error("Network response was not ok.");
 				})
