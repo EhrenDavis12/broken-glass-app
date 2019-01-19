@@ -33,12 +33,6 @@ export class ResultPage extends React.Component {
     const { showModal, onToggleModal } = this.props;
     return (
       <div>
-        <nav className="nav">
-          <a className="nav-link active" href="#">Active</a>
-          <a className="nav-link" href="#">Link</a>
-          <a className="nav-link" href="#">Link</a>
-          <a className="nav-link disabled" href="#">Disabled</a>
-        </nav>
         <div className="container">
           <SearchBar />
           <div> Google Maps</div>

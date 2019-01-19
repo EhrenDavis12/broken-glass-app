@@ -14,7 +14,7 @@ import HomePage from "containers/HomePage/Loadable";
 import ResultPage from 'containers/ResultPage/Loadable';
 import NotFoundPage from "containers/NotFoundPage/Loadable";
 import Profile from "containers/EhrensPlayGround/Profile";
-import Nav from "containers/EhrensPlayGround/Nav";
+import Nav from "components/Nav/index";
 import Public from "containers/EhrensPlayGround/Public";
 import Private from "containers/EhrensPlayGround/Private";
 import Review from "containers/EhrensPlayGround/Review";
@@ -52,7 +52,7 @@ class App extends Component {
 				<div className="body">
 					<Switch>
 						<PublicRoute exact path="/" component={HomePage} />
-						<Route path="/results" component={ResultPage} />
+						<PublicRoute path="/results" component={ResultPage} />
 						<PublicRoute exact path="/callback" component={Callback} />
 						<PrivateRoute exact path="/profile" component={Profile} />
 						<Route path="/api/v1/public" component={Public} />

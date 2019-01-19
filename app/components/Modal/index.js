@@ -26,9 +26,11 @@ function Modal(props) {
     modal = (
       <StyledModalBlock>
         <StyledModalMain>
-          <Button toggle={true} onClick={props.onClick}>Close</Button>
-          <h1>Your Rating</h1>
-          {props.children}
+          <div className="container mb-5">
+            <Button toggle={true} onClick={props.onClick}>Close</Button>
+            <h1>Your Rating</h1>
+            {props.children}
+          </div>
         </StyledModalMain>
       </StyledModalBlock>
     )
