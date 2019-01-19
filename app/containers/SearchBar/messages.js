@@ -13,8 +13,8 @@ export default defineMessages({
     id: `${scope}.header`,
     defaultMessage: 'Business name',
   },
-  message: {
-    id: `${scope}.message`,
+  searchLabel: {
+    id: `${scope}.searchLabel`,
     defaultMessage: 'Business name',
   },
   button:{

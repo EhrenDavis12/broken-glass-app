@@ -12,3 +12,4 @@ npm-debug.log
 .github
 .env
 .vscode
+package-lock.json

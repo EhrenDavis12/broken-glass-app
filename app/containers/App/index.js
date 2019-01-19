@@ -11,6 +11,7 @@ import React, { Component } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import HomePage from "containers/HomePage/Loadable";
+import ResultPage from 'containers/ResultPage/Loadable';
 import NotFoundPage from "containers/NotFoundPage/Loadable";
 import Profile from "containers/EhrensPlayGround/Profile";
 import Nav from "containers/EhrensPlayGround/Nav";
@@ -51,6 +52,7 @@ class App extends Component {
 				<div className="body">
 					<Switch>
 						<PublicRoute exact path="/" component={HomePage} />
+						<Route path="/results" component={ResultPage} />
 						<PublicRoute exact path="/callback" component={Callback} />
 						<PrivateRoute exact path="/profile" component={Profile} />
 						<Route path="/api/v1/public" component={Public} />
