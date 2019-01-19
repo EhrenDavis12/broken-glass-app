@@ -8,16 +8,11 @@ import { initialState } from './reducer';
 const selectSearchBarDomain = state =>
   state.get('searchBar', initialState);
 
-/**
- * Other specific selectors
- */
-
-/**
- * Default selector used by SearchBar
- */
-
 const makeSelectSearchBar = () =>
   createSelector(selectSearchBarDomain, substate => substate.toJS());
 
+const makeSelectSearch = () =>
+  createSelector(selectSearchBarDomain, searchState => searchState.get('currentSearch'))
+
 export default makeSelectSearchBar;
-export { selectSearchBarDomain };
+export { makeSelectSearchBar, selectSearchBarDomain, makeSelectSearch};
