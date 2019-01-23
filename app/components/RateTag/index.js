@@ -35,6 +35,7 @@ class RateTag extends React.PureComponent {
       Text={this.props.Text} 
       RatingFor={this.props.RatingFor} 
       onChangeComment={this.props.onChangeComment}
+      DropDownOptions={this.props.DropDownOptions}
       />)
 
     }

@@ -43,57 +43,100 @@ export class RatingBox extends React.Component {
     }
   }
 
-  onChangeUserComment = (UserComment,Type) => {
+  onChangeUserComment = (UserComment, Type) => {
     switch (Type) {
       case "JOBTYPE":
-        //this.setState()
+        this.setState({ JobTypeId: UserComment })
         break;
       case "PAYTYPE":
-        //this.setState()
+        this.setState({ PayTypeId: UserComment })
         break;
       case "AVERAGE":
-        this.setState({shiftPayComment:UserComment})
+        this.setState({ shiftPayComment: UserComment })
         break;
       case "MANAGEMENT":
-      this.setState({managementComment:UserComment})
+        this.setState({ managementComment: UserComment })
         break;
       case "BUSY":
-      this.setState({busyComment:UserComment})
+        this.setState({ busyComment: UserComment })
         break;
       case "CUSTOMERS":
-      this.setState({customerComment:UserComment})
+        this.setState({ customerComment: UserComment })
         break;
       case "OVERALL":
-      this.setState({overallComment:UserComment})
+        this.setState({ overallComment: UserComment })
         break;
     }
   }
 
   onClickRating = (Rating, Type) => {
     switch (Type) {
-      case "JOBTYPE":
-        //this.setState()
-        break;
-      case "PAYTYPE":
-        //this.setState()
-        break;
       case "AVERAGE":
-        this.setState({shiftPayRating:Rating})
+        this.setState({ shiftPayRating: Rating })
         break;
       case "MANAGEMENT":
-      this.setState({managementRating:Rating})
+        this.setState({ managementRating: Rating })
         break;
       case "BUSY":
-      this.setState({busyRating:Rating})
+        this.setState({ busyRating: Rating })
         break;
       case "CUSTOMERS":
-      this.setState({customerRating:Rating})
+        this.setState({ customerRating: Rating })
         break;
       case "OVERALL":
-      this.setState({overallRating:Rating})
+        this.setState({ overallRating: Rating })
         break;
     }
+  }
 
+  Submit = (evt) => {
+    evt.preventDefault();
+    const review = {
+      company: {
+        id: "HATE",
+        companyName: "xxxxx",
+        averageRating: 33555,
+        reviewCount: 335556
+      },
+
+      review: {
+        userId: "body.revdiew.uddsersId",
+        shiftPayComent: this.state.shiftPayComment,
+        shiftPayRating: this.state.shiftPayRating,
+        managementComment: this.state.managementComment,
+        managementRating: this.state.managementRating,
+        busyComment: this.state.busyComment,
+        busyRating: this.state.busyRating,
+        customerComment: this.state.customerComment,
+        customerRating: this.state.customerRating,
+        overallComment: this.state.overallComment,
+        overallRating: this.state.overallRating,
+        CompanyId: "HATE",
+        JobTypeId: this.state.JobTypeId,
+        PayTypeId: this.state.PayTypeId
+      }
+    }
+    console.log(review);
+    this.PostReview(review);
+  }
+
+  PostReview = (review) => {
+    try {
+      const accessToken = this.props.auth.getAccessToken();
+      post(`${process.env.REACT_APP_API_URL}/api/v1/review`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        review
+      }, )
+        .then(response => {
+          if (response.ok) return response.json();
+          throw new Error("Network response was not ok.");
+        })
+        .then(response => {
+          this.setState({ message: response });
+        });
+    } catch (error) {
+      this.setState({ message: error.message });
+    }
   }
 
 
@@ -110,6 +153,7 @@ export class RatingBox extends React.Component {
             onClickRating={this.onClickRating}
             onChangeComment={this.onChangeUserComment}
             RatingFor='JOBTYPE'
+            DropDownOptions={this.props.JobDropDownOptions}
           />
           <RateTag
             Label='Pay Types '
@@ -118,6 +162,7 @@ export class RatingBox extends React.Component {
             onChangeComment={this.onChangeUserComment}
             ReadOnly={ReadOnly}
             RatingFor='PAYTYPE'
+            DropDownOptions={this.props.PayDropDownOptions}
           />
           <RateTag
             Label='Average Shift $ '
@@ -169,7 +214,7 @@ export class RatingBox extends React.Component {
             onChangeComment={this.onChangeUserComment}
             RatingFor='OVERALL'
           />
-          <Button ReadOnly={ReadOnly}>Submit</Button>
+          {ReadOnly ? <></> : (<Button onClick={this.Submit} >Submit</Button>)}
         </form>
       </div>
     );

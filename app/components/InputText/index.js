@@ -24,6 +24,7 @@ function InputText(props) {
       defaultValue={props.Text}
       readOnly={props.ReadOnly}
       onChange={onChange}
+      required={!props.ReadOnly}
     />
   )
 

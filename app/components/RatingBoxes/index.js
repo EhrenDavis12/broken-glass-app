@@ -20,7 +20,14 @@ class RatingBoxes extends React.Component {
     else {
       return (
         <div>
-          {Reviews.map(review => (<RatingBox key={review.uuid} Review={review} ReadOnly={true} />))}
+          {Reviews.map(review => (
+            <RatingBox
+              key={review.uuid}
+              Review={review}
+              ReadOnly={true}
+              PayDropDownOptions={null}
+              JobDropDownOptions={null}
+            />))}
         </div>
       );
     }

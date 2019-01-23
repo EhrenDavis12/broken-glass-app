@@ -28,9 +28,48 @@ import messages from './messages';
 
 /* eslint-disable react/prefer-stateless-function */
 export class ResultPage extends React.Component {
-  constructor (props){
+  constructor(props) {
     super(props);
-    this.state = {response:null};
+    this.state = { response: null, PayDropDownOptions: null, JobDropDownOptions: null };
+  }
+
+  componentDidMount(){
+    let api = '/api/v1/jobs'
+    fetch(`${process.env.REACT_APP_API_URL}${api}`,
+    )
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {
+        const stat = [];
+        response.forEach(type => {
+          console.log(type.id + " " + type.JobTypeDescription);
+          stat.push({Id:type.id, Text:type.JobTypeDescription})
+        });
+        this.setState({ JobDropDownOptions: stat });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    api = '/api/v1/pay'
+    fetch(`${process.env.REACT_APP_API_URL}${api}`,
+    )
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {        
+        const stat = [];
+        response.forEach(type => {
+          stat.push({Id:type.id, Text:type.PayTypeDescription})
+        });
+        this.setState({ PayDropDownOptions: stat });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   loadReviews = (store) => {
@@ -40,7 +79,6 @@ export class ResultPage extends React.Component {
       //set the search for all
       api = '/api/v1/allreviews/'
     }
-    console.log(api);
     fetch(`${process.env.REACT_APP_API_URL}${api}${store}`,
     )
       .then(response => {
@@ -48,9 +86,7 @@ export class ResultPage extends React.Component {
         throw new Error("Network response was not ok.");
       })
       .then(response => {
-        console.log("API Response");
-        console.log(response);
-        this.setState({response:response});
+        this.setState({ response: response });
       })
       .catch(error => {
         console.log(error);
@@ -58,12 +94,10 @@ export class ResultPage extends React.Component {
   }
 
   loadRatingBox = (response) => {
-    console.log("loadRatingBox");
-    console.log(response);
-    if(response === null){
+    if (response === null) {
       return (<></>);
     } else {
-      return response.map(review =>{
+      return response.map(review => {
         (<RatingBox {...review} ReadOnly={true} />)
       })
     }
@@ -71,7 +105,6 @@ export class ResultPage extends React.Component {
 
   render() {
     const { resultsPage, showModal, onToggleModal, reviews } = this.props;
-    console.log(resultsPage);
     return (
       <div>
         <div className="container">
@@ -88,8 +121,16 @@ export class ResultPage extends React.Component {
           </Button>
           <button className="button button-sm button-primary">Rate Yourself</button>
 
-          <Modal onClick={onToggleModal} ShowModal={showModal}> <RatingBox ReadOnly={false} /></Modal>
-          
+          <Modal 
+            onClick={onToggleModal} 
+            ShowModal={showModal}> 
+              <RatingBox 
+                ReadOnly={false} 
+                JobDropDownOptions={this.state.JobDropDownOptions} 
+                PayDropDownOptions={this.state.PayDropDownOptions} 
+              />
+          </Modal>
+
           <RatingBoxes Reviews={this.state.response} />
         </div>
       </div>
