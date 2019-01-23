@@ -12,25 +12,66 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
 import Button from 'components/Button/index';
-import RatingBox from "components/RatingBox/index";
+import RatingBox from "containers/RatingBox/Loadable";
+import RatingBoxes from "components/RatingBoxes/index";
 import Modal from "components/Modal/index";
 import RatingBar from "components/RatingBar/index";
 import RateTag from "components/RateTag/index";
 import SearchBar from "containers/SearchBar/Loadable";
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import { toggleModal } from "./actions";
-import { makeSelectResultPage, makeToggleModal } from './selectors';
+import { toggleModal, setReviews } from "./actions";
+import { makeSelectResultPage, makeToggleModal, makeSetReviews } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 
 /* eslint-disable react/prefer-stateless-function */
 export class ResultPage extends React.Component {
+  constructor (props){
+    super(props);
+    this.state = {response:null};
+  }
 
+  loadReviews = (store) => {
+    let api = '/api/v1/onereview/'
+    store = 'HATE';
+    if (false) {
+      //set the search for all
+      api = '/api/v1/allreviews/'
+    }
+    console.log(api);
+    fetch(`${process.env.REACT_APP_API_URL}${api}${store}`,
+    )
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {
+        console.log("API Response");
+        console.log(response);
+        this.setState({response:response});
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  loadRatingBox = (response) => {
+    console.log("loadRatingBox");
+    console.log(response);
+    if(response === null){
+      return (<></>);
+    } else {
+      return response.map(review =>{
+        (<RatingBox {...review} ReadOnly={true} />)
+      })
+    }
+  }
 
   render() {
-    const { showModal, onToggleModal } = this.props;
+    const { resultsPage, showModal, onToggleModal, reviews } = this.props;
+    console.log(resultsPage);
     return (
       <div>
         <div className="container">
@@ -38,17 +79,18 @@ export class ResultPage extends React.Component {
           <div> Google Maps</div>
           <hr />
           <h1>Store Name!!!</h1>
+          <button onClick={this.loadReviews}>API </button>
           <RatingBar />
-          <Button 
-          onClick={this.props.onToggleModal} 
-          toggle={this.props.showModal}> 
+          <Button
+            onClick={this.props.onToggleModal}
+            toggle={this.props.showModal}>
             Rate Yourself
           </Button>
           <button className="button button-sm button-primary">Rate Yourself</button>
-          
+
           <Modal onClick={onToggleModal} ShowModal={showModal}> <RatingBox ReadOnly={false} /></Modal>
-          {/*We will have to decide here as to if they are logged on to loop through them all or just display one.*/}
-          <RatingBox ReadOnly={true} />
+          
+          <RatingBoxes Reviews={this.state.response} />
         </div>
       </div>
     );
@@ -56,9 +98,11 @@ export class ResultPage extends React.Component {
 }
 
 ResultPage.propTypes = {
+  resultPage: PropTypes.any,
   dispatch: PropTypes.func.isRequired,
   showModal: PropTypes.bool,
   onToggleModal: PropTypes.func,
+  apiFindOneReview: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({

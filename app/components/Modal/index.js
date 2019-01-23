@@ -14,7 +14,6 @@ import StyledModalMain from './StyledModalMain';
 
 
 function Modal(props) {
-  console.log(props.children);
 
 
   const showHideClassName = props.ShowModal ? "modal display-block" : "modal display-none";
