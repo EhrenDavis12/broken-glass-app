@@ -55,7 +55,7 @@ class RateTag extends React.PureComponent {
         {/* <InputText ReadOnly={this.props.ReadOnly} Text={this.props.Text} /> */}
         </div>
         <div className='col-sm-2'>
-          <RatingBar Rating={this.props.Rating} onClick={this.props.onClickRating} RatingFor={this.props.RatingFor}/>
+          <RatingBar Rating={this.props.Rating} ReadOnly={this.props.ReadOnly} onClick={this.props.onClickRating} RatingFor={this.props.RatingFor}/>
         </div>
         
       </div>
