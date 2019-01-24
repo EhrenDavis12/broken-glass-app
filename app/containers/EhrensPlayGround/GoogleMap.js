@@ -30,7 +30,6 @@ const MyMapComponent = compose(
 				refs.map = ref;
 			},
 			fetchPlaces: ({ updatePlaces }) => searchPlace => {
-				debugger;
 				const bounds = refs.map.getBounds();
 				const service = new google.maps.places.PlacesService(
 					refs.map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
@@ -46,21 +45,10 @@ const MyMapComponent = compose(
 						updatePlaces(results);
 					}
 				});
-			},
-			clickedMe: () => (place, callBack) => {
-				console.log(`callBack3:${callBack}`);
-				console.log(`place_id:${place.place_id}`);
-				console.log(`vicinity:${place.vicinity}`);
-				console.log(`rating:${place.rating}`);
-				console.log(`photos:${place.photos[0].html_attributions[0]}`);
-				console.log(`user_ratings_total:${place.user_ratings_total}`);
-				callBack(place);
 			}
 		};
 	})
 )(props => {
-	console.log(`searchPlace:${props.searchPlace}`);
-	console.log(`callBack2:${props.callBack}`);
 	return (
 		<GoogleMap
 			/* onTilesLoaded={props.fetchPlaces} */
@@ -86,7 +74,6 @@ const MyMapComponent = compose(
 
 export default class MyFancyComponent extends React.PureComponent {
 	render() {
-		console.log(`callBack:${this.props.callBack}`);
 		return (
 			<MyMapComponent
 				searchPlace={this.props.searchPlace}
