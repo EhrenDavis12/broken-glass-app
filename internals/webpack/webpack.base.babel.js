@@ -140,7 +140,10 @@ module.exports = options => ({
 					process.env.REACT_APP_AUTH0_API_URL
 				),
 				REACT_APP_API_URL: JSON.stringify(process.env.REACT_APP_API_URL),
-				REACT_APP_URL: JSON.stringify(process.env.REACT_APP_URL)
+				REACT_APP_URL: JSON.stringify(process.env.REACT_APP_URL),
+				REACT_APP_GOOGLE_API_KEY: JSON.stringify(
+					process.env.REACT_APP_GOOGLE_API_KEY
+				)
 			}
 		})
 	]),
