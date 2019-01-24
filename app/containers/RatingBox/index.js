@@ -121,21 +121,23 @@ export class RatingBox extends React.Component {
   }
 
   PostReview = (review) => {
+    console.log('Post Review');
     try {
+      
       const accessToken = this.props.auth.getAccessToken();
-      post(`${process.env.REACT_APP_API_URL}/api/v1/review`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        review
-      }, )
+      fetch(
+        `${process.env.REACT_APP_API_URL}/api/v1/review`
+        , {
+          method: 'POST',
+          body: JSON.stringify(review),
+          headers: { Authorization: `Bearer ${accessToken}` }
+        })
         .then(response => {
           if (response.ok) return response.json();
           throw new Error("Network response was not ok.");
         })
-        .then(response => {
-          this.setState({ message: response });
-        });
     } catch (error) {
-      this.setState({ message: error.message });
+      console.log(error.message);
     }
   }
 
