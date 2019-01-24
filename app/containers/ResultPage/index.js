@@ -83,7 +83,7 @@ export class ResultPage extends React.Component {
 
   loadReviews = store => {
     let api = "/api/v1/onereview/";
-    store = "HATE";
+    //store = "HATE";
     if (false) {
       //set the search for all
       api = "/api/v1/allreviews/";
@@ -112,9 +112,8 @@ export class ResultPage extends React.Component {
   };
 
   loadMapResults = x => {
-    console.log("hello");
-    console.log(x);
     this.setState({ selection: x });
+    this.loadReviews(x.place_id);
   };
 
   render() {
@@ -126,23 +125,26 @@ export class ResultPage extends React.Component {
           <MapContainer searchPlace={search} callBack={this.loadMapResults} />
           <hr />
           <div hidden={this.state.selection === null}>
-          <img src={this.state.selection===null? "": this.state.selection.icon}/>
-            <h1>{this.state.selection===null? "": this.state.selection.name}</h1>
-            <p>{this.state.selection===null? "": this.state.selection.id}</p>
-            <p>{this.state.selection===null? "": this.state.selection.place_id}</p>
-            <p>Address: {this.state.selection===null? "": this.state.selection.vicinity}</p>
-            <p>Google Reviews: {this.state.selection===null? 0:this.state.selection.user_ratings_total}</p>
-            <button onClick={this.loadReviews}>API </button>
-            <RatingBar Rating={this.state.selection===null? 0:this.state.selection.rating} ReadOnly={true} />
+            <img src={this.state.selection === null ? "" : this.state.selection.icon} />
+            <h1>{this.state.selection === null ? "" : this.state.selection.name}</h1>
+            {/* <p>{this.state.selection === null ? "" : this.state.selection.id}</p>
+            <p>{this.state.selection === null ? "" : this.state.selection.place_id}</p> */}
+            <p>Address: {this.state.selection === null ? "" : this.state.selection.vicinity}</p>
+            <p>Google Reviews: {this.state.selection === null ? 0 : this.state.selection.user_ratings_total}</p>
+            
+            <RatingBar
+              Rating={this.state.selection === null ? 0 : this.state.selection.rating}
+              ReadOnly={true} />
             <Button onClick={this.props.onToggleModal} toggle={this.props.showModal}>
               Rate Yourself
-					</Button>
-            <button className="button button-sm button-primary">Rate Yourself</button>
+					  </Button>
 
             <Modal onClick={onToggleModal} ShowModal={showModal}>
               <RatingBox
                 ReadOnly={false}
                 auth={this.props.auth}
+                storeName={this.state.selection === null ? "" : this.state.selection.name}
+                storeId={this.state.selection === null ? "" : this.state.selection.place_id}
                 JobDropDownOptions={this.state.JobDropDownOptions}
                 PayDropDownOptions={this.state.PayDropDownOptions}
               />

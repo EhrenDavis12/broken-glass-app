@@ -13,7 +13,6 @@ export const initialState = fromJS({
 );
 
 function searchBarReducer(state = initialState, action) {
-  console.log(action.search);
   switch (action.type) {
     case SET_CURRENT_SEARCH:
       return state.set('currentSearch', action.search);
