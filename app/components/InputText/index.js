@@ -11,6 +11,10 @@ import StyledInputText from './StyledInputText';
 
 function InputText(props) {
 
+  const onChange = (event) =>{
+    props.onChangeComment(event.target.value, props.RatingFor);
+  }
+
   let Input = (
     <StyledInputText
       type='text'
@@ -19,6 +23,8 @@ function InputText(props) {
       className='disabled border'
       defaultValue={props.Text}
       readOnly={props.ReadOnly}
+      onChange={onChange}
+      required={!props.ReadOnly}
     />
   )
 

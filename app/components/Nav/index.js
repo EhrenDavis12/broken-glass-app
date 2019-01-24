@@ -13,7 +13,6 @@ import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 
 function Nav(props) {
-  console.log(props);
   const {
     isAuthenticated,
     userHasScopes,
@@ -58,7 +57,6 @@ function Nav(props) {
     </ul>
   </nav>
   );
-  console.log(nav);
   return nav;
 }
 

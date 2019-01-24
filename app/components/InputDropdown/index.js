@@ -10,12 +10,18 @@ import PropTypes from 'prop-types';
 
 
 function InputDropdown(props) {
+
+  const onChange = (event) =>{
+    console.log(event.target.value);
+    props.onChangeComment(event.target.value, props.RatingFor);
+  }
+
+  const dropDownOptions = () => props.DropDownOptions.map(opt => (<option key={opt.id} value={opt.Id}>{opt.Text}</option>))
+
   return (
-    <select disabled={props.ReadOnly}>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
+    <select disabled={props.ReadOnly} onChange={onChange}>
+    <option value={0}>Pick one</option>
+    {dropDownOptions()}
     </select>
   );
 }
@@ -23,6 +29,9 @@ function InputDropdown(props) {
 InputDropdown.propTypes = {
   Options: PropTypes.arrayOf(PropTypes.object),
   ReadOnly: PropTypes.bool,
+  RatingFor: PropTypes.string,
+  onChangeComment: PropTypes.func,
+  DropDownOptions: PropTypes.array,
 };
 
 export default InputDropdown;

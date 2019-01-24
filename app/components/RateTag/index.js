@@ -22,13 +22,26 @@ class RateTag extends React.PureComponent {
   InputType = ()=>{
     switch(this.props.Type){
     case "Text":
-     return (<InputText ReadOnly={this.props.ReadOnly} Text={this.props.Text} />);
+     return (<InputText 
+      ReadOnly={this.props.ReadOnly} 
+      Text={this.props.Text} 
+      RatingFor={this.props.RatingFor} 
+      onChangeComment={this.props.onChangeComment}
+      />);
 
      case "DropDown":
-     return (<InputDropdown ReadOnly={this.props.ReadOnly}/>)
+     return (<InputDropdown 
+      ReadOnly={this.props.ReadOnly} 
+      Text={this.props.Text} 
+      RatingFor={this.props.RatingFor} 
+      onChangeComment={this.props.onChangeComment}
+      DropDownOptions={this.props.DropDownOptions}
+      />)
 
     }
   };
+
+
 
   render() {
 
@@ -42,7 +55,7 @@ class RateTag extends React.PureComponent {
         {/* <InputText ReadOnly={this.props.ReadOnly} Text={this.props.Text} /> */}
         </div>
         <div className='col-sm-2'>
-          <RatingBar />
+          <RatingBar Rating={this.props.Rating} onClick={this.props.onClickRating} RatingFor={this.props.RatingFor}/>
         </div>
         
       </div>
