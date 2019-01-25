@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 function InputDropdown(props) {
 
   const onChange = (event) =>{
-    console.log(event.target.value);
     props.onChangeComment(event.target.value, props.RatingFor);
   }
 

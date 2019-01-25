@@ -25,7 +25,7 @@ function Modal(props) {
     modal = (
       <StyledModalBlock>
         <StyledModalMain>
-          <div className="container mb-5">
+          <div className="container">
             <Button toggle={true} onClick={props.onClick}>Close</Button>
             <h1>Your Rating</h1>
             {props.children}

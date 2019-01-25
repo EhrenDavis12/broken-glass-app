@@ -26,6 +26,7 @@ export class RatingBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      userid: "",
       JobTypeId: props.Review !== undefined ? props.Review.JobTypeId : "",
       PayTypeId: props.Review !== undefined ? props.Review.PayTypeId : "",
 
@@ -40,6 +41,14 @@ export class RatingBox extends React.Component {
       overallComment: props.Review !== undefined ? props.Review.overallComment : "",
       overallRating: props.Review !== undefined ? props.Review.overallRating : 0,
 
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.auth !== undefined) {
+      this.props.auth.getProfile((profile, error) => {
+        this.setState({ userid: profile.sub });
+      });
     }
   }
 
@@ -91,16 +100,17 @@ export class RatingBox extends React.Component {
 
   Submit = (evt) => {
     evt.preventDefault();
+
     const review = {
       company: {
-        id: "HATE",
-        companyName: "xxxxx",
-        averageRating: 33555,
-        reviewCount: 335556
+        id: this.props.storeId,
+        companyName: this.props.storeName,
+        averageRating: 0,
+        reviewCount: 0
       },
 
       review: {
-        userId: "body.revdiew.uddsersId",
+        userId: this.state.userid,
         shiftPayComent: this.state.shiftPayComment,
         shiftPayRating: this.state.shiftPayRating,
         managementComment: this.state.managementComment,
@@ -111,31 +121,31 @@ export class RatingBox extends React.Component {
         customerRating: this.state.customerRating,
         overallComment: this.state.overallComment,
         overallRating: this.state.overallRating,
-        CompanyId: "HATE",
+        CompanyId: this.props.storeId,
         JobTypeId: this.state.JobTypeId,
         PayTypeId: this.state.PayTypeId
       }
     }
-    console.log(review);
     this.PostReview(review);
   }
 
   PostReview = (review) => {
     try {
+      console.log(JSON.stringify(review));
       const accessToken = this.props.auth.getAccessToken();
-      post(`${process.env.REACT_APP_API_URL}/api/v1/review`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        review
-      }, )
+      fetch(
+        `${process.env.REACT_APP_API_URL}/api/v1/review`
+        , {
+          method: 'POST',
+          body: JSON.stringify(review),
+          headers: { Authorization: `Bearer ${accessToken}` }
+        })
         .then(response => {
           if (response.ok) return response.json();
           throw new Error("Network response was not ok.");
         })
-        .then(response => {
-          this.setState({ message: response });
-        });
     } catch (error) {
-      this.setState({ message: error.message });
+      console.log(error.message);
     }
   }
 

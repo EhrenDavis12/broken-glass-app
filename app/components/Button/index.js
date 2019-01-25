@@ -15,10 +15,10 @@ import Wrapper from './Wrapper';
 
 function Button(props) {
   let button = (
-    <StyledButton 
+    <StyledButton
       href={props.href}
       onClick={props.onClick}
-      style={{display: props.ReadOnly ? 'none' : 'block' }}
+      style={{ display: props.ReadOnly ? 'none' : 'block' }}
       data-toggle={props.toggle}
     >
       {props.children}
@@ -28,13 +28,14 @@ function Button(props) {
 
   if (props.handleRoute) {
     button = (
-      <A 
-        href={props.href}
-        onClick={props.handleRoute}>
-        <Link to={props.href}>  
-        {props.children}
-         </Link> 
-      </A>
+      <Link to={props.href}>
+        <A
+          href={props.href}
+        >
+          {props.children}
+        </A>
+
+      </Link>
     );
   }
 
@@ -46,7 +47,7 @@ Button.propTypes = {
   href: PropTypes.string,
   onClick: PropTypes.func,
   children: PropTypes.string.isRequired,
-  toggle:PropTypes.bool,
+  toggle: PropTypes.bool,
 };
 
 export default Button;
