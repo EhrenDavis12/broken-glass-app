@@ -11,6 +11,7 @@ import { FormattedMessage } from "react-intl";
 import { createStructuredSelector } from "reselect";
 import { compose } from "redux";
 
+import Footer from "components/Footer/index";
 import Button from "components/Button/index";
 import RatingBox from "containers/RatingBox/Loadable";
 import RatingBoxes from "components/RatingBoxes/index";
@@ -150,9 +151,10 @@ export class ResultPage extends React.Component {
               />
             </Modal>
 
-            <RatingBoxes Reviews={this.state.response} />
+            <RatingBoxes Reviews={this.state.response}  />
           </div>
         </div>
+        {/* <Footer /> */}
       </div>
     );
   }
@@ -176,6 +178,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     onToggleModal: evt => {
+      console.log(evt);
       dispatch(toggleModal(evt.target.dataset.toggle === "true" ? false : true));
     },
     dispatch
