@@ -14,6 +14,8 @@ import { StyledButton, StyledButtonDark } from './StyledButton';
 import Wrapper from './Wrapper';
 
 function Button(props) {
+
+
   let button = (
     <StyledButton
       href={props.href}
@@ -64,6 +66,10 @@ function Button(props) {
         </Link>
       );
     }
+  }
+
+  if(props.hidden){
+    button = (<></>);
   }
 
   return button;
