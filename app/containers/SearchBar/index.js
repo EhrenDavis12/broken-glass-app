@@ -44,25 +44,28 @@ export class SearchBar extends React.Component {
       dispatch(setCurrentSearch(event.target.value));
     } */
 
+    Redirect = () =>{
+      const { currentSearch, onChangeCurrentSearch, onClickButton, onKeyPress } = this.props;
+      const { button } = { ...messages };
+
+      if (this.state.redirect) {
+        this.setState({redirect:false});
+        return (<Redirect to='/results' />)
+      }
+      return (
+        <div>
+          <TextBox
+            handelInputChange={onChangeCurrentSearch}
+            onKeyPress={this.onKeyPress}
+            PlaceHolder={<FormattedMessage {...messages.searchLabel}
+              TextValue={currentSearch} />} />
+          <Button href='/results' handleRoute={onClickButton}>{button.defaultMessage}</Button>
+        </div>
+      );
+    }
 
   render() {
-    const { currentSearch, onChangeCurrentSearch, onClickButton, onKeyPress } = this.props;
-    const { button } = { ...messages };
-
-    if (this.state.redirect) {
-      this.setState({redirect:false});
-      return (<Redirect to='/results' />)
-    }
-    return (
-      <div>
-        <TextBox
-          handelInputChange={onChangeCurrentSearch}
-          onKeyPress={this.onKeyPress}
-          PlaceHolder={<FormattedMessage {...messages.searchLabel}
-            TextValue={currentSearch} />} />
-        <Button href='/results' handleRoute={onClickButton}>{button.defaultMessage}</Button>
-      </div>
-    );
+    return this.Redirect();
   }
 }
 

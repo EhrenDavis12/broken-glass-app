@@ -33,6 +33,7 @@ import reducer from "./reducer";
 import saga from "./saga";
 import messages from "./messages";
 import MapContainer from "containers/EhrensPlayGround/GoogleMap";
+import { debug } from "util";
 
 
 const Container = styled.div`
@@ -97,10 +98,11 @@ export class ResultPage extends React.Component {
       });
   }
 
-  loadReviews = store => {
+  loadReviews = ( multi ) => {
+    const store = this.state.selection.place_id;
     let api = "/api/v1/onereview/";
-    //store = "HATE";
-    if (false) {
+    let allFlg = multi === undefined? true : false;
+    if (allFlg) {
       //set the search for all
       api = "/api/v1/allreviews/";
     }
@@ -129,11 +131,22 @@ export class ResultPage extends React.Component {
 
   loadMapResults = x => {
     this.setState({ selection: x });
-    this.loadReviews(x.place_id);
+    this.loadReviews(false);
+  };
+
+  loadAll = () =>{
+    this.loadReviews(true);
+  }
+
+  displayMap = () => {
+    return (
+      <MapContainer searchPlace={this.props.search} callBack={this.loadMapResults} />
+    );
   };
 
   render() {
     const { resultsPage, showModal, onToggleModal, reviews, search } = this.props;
+    const loggedOut = !this.props.auth.isAuthenticated();
     return (
       <div>
         <Modal onClick={onToggleModal} ShowModal={showModal}>
@@ -151,8 +164,7 @@ export class ResultPage extends React.Component {
           <div className="text-right mb-3">
             <SearchBar />
           </div>
-          <MapContainer searchPlace={search} callBack={this.loadMapResults} />
-
+          {this.displayMap()}
           <Container hidden={this.state.selection === null}>
             <img src={this.state.selection === null ? "" : this.state.selection.icon} />
             <Title>{this.state.selection === null ? "" : this.state.selection.name}</Title>
@@ -164,11 +176,15 @@ export class ResultPage extends React.Component {
             <RatingBar
               Rating={this.state.selection === null ? 0 : this.state.selection.rating}
               ReadOnly={true} />
-            <Button className='mt-1' onClick={this.props.onToggleModal} toggle={this.props.showModal} style='dark' >
+            <Button className='mt-1' hidden={loggedOut} onClick={this.props.onToggleModal} toggle={this.props.showModal} style='dark' >
               Rate for Yourself
 					  </Button>
 
             <RatingBoxes Reviews={this.state.response} />
+
+            <Button hidden={loggedOut} onClick={this.loadAll} style='dark' >
+              View More
+					  </Button>
           </Container>
         </div>
         {/* <Footer /> */}
