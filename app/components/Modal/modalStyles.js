@@ -20,13 +20,15 @@ display: none;
 `; */
 const modalMain = css`
 position:fixed;
-  background: white;
-  width: 80%;
-  height: 100%;
+  background: gray;
+  color: black;
+  width: 60%;
+  height: 80%;
   top:50%;
   left:50%;
   transform: translate(-50%,-50%);
   z-index: 1;
+  overflow-y:auto;
 `;
 
 //export default modalMain;

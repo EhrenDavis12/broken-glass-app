@@ -18,8 +18,8 @@ function InputText(props) {
   let Input = (
     <StyledInputText
       type='text'
-      style={{ width: '100%', height: '25' }}
-      rows='3'
+      style={{ width: '100%', height: '15' }}
+      rows='2'
       className='disabled border'
       defaultValue={props.Text}
       readOnly={props.ReadOnly}

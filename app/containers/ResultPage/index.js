@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { createStructuredSelector } from "reselect";
 import { compose } from "redux";
+import styled from 'styled-components';
 
 import Footer from "components/Footer/index";
 import Button from "components/Button/index";
@@ -33,6 +34,21 @@ import saga from "./saga";
 import messages from "./messages";
 import MapContainer from "containers/EhrensPlayGround/GoogleMap";
 
+
+const Container = styled.div`
+opacity: 0.8;
+background-color:#f5f5f0;
+margin-top: 25px;
+padding: 8px;
+`;
+
+const Title = styled.h1`
+size:6em;
+color:black;
+weight: bold;
+`;
+
+
 /* eslint-disable react/prefer-stateless-function */
 export class ResultPage extends React.Component {
   constructor(props) {
@@ -55,7 +71,6 @@ export class ResultPage extends React.Component {
       .then(response => {
         const stat = [];
         response.forEach(type => {
-          console.log(type.id + " " + type.JobTypeDescription);
           stat.push({ Id: type.id, Text: type.JobTypeDescription });
         });
         this.setState({ JobDropDownOptions: stat });
@@ -121,38 +136,40 @@ export class ResultPage extends React.Component {
     const { resultsPage, showModal, onToggleModal, reviews, search } = this.props;
     return (
       <div>
+        <Modal onClick={onToggleModal} ShowModal={showModal}>
+          <RatingBox
+            ReadOnly={false}
+            auth={this.props.auth}
+            storeName={this.state.selection === null ? "" : this.state.selection.name}
+            storeId={this.state.selection === null ? "" : this.state.selection.place_id}
+            JobDropDownOptions={this.state.JobDropDownOptions}
+            PayDropDownOptions={this.state.PayDropDownOptions}
+          />
+        </Modal>
+
         <div className="container">
-          <SearchBar />
+          <div className="text-right mb-3">
+            <SearchBar />
+          </div>
           <MapContainer searchPlace={search} callBack={this.loadMapResults} />
-          <hr />
-          <div hidden={this.state.selection === null}>
+
+          <Container hidden={this.state.selection === null}>
             <img src={this.state.selection === null ? "" : this.state.selection.icon} />
-            <h1>{this.state.selection === null ? "" : this.state.selection.name}</h1>
+            <Title>{this.state.selection === null ? "" : this.state.selection.name}</Title>
             {/* <p>{this.state.selection === null ? "" : this.state.selection.id}</p>
             <p>{this.state.selection === null ? "" : this.state.selection.place_id}</p> */}
             <p>Address: {this.state.selection === null ? "" : this.state.selection.vicinity}</p>
             <p>Google Reviews: {this.state.selection === null ? 0 : this.state.selection.user_ratings_total}</p>
-            
+
             <RatingBar
               Rating={this.state.selection === null ? 0 : this.state.selection.rating}
               ReadOnly={true} />
-            <Button onClick={this.props.onToggleModal} toggle={this.props.showModal}>
-              Rate Yourself
+            <Button className='mt-1' onClick={this.props.onToggleModal} toggle={this.props.showModal} style='dark' >
+              Rate for Yourself
 					  </Button>
 
-            <Modal onClick={onToggleModal} ShowModal={showModal}>
-              <RatingBox
-                ReadOnly={false}
-                auth={this.props.auth}
-                storeName={this.state.selection === null ? "" : this.state.selection.name}
-                storeId={this.state.selection === null ? "" : this.state.selection.place_id}
-                JobDropDownOptions={this.state.JobDropDownOptions}
-                PayDropDownOptions={this.state.PayDropDownOptions}
-              />
-            </Modal>
-
-            <RatingBoxes Reviews={this.state.response}  />
-          </div>
+            <RatingBoxes Reviews={this.state.response} />
+          </Container>
         </div>
         {/* <Footer /> */}
       </div>
@@ -178,7 +195,6 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     onToggleModal: evt => {
-      console.log(evt);
       dispatch(toggleModal(evt.target.dataset.toggle === "true" ? false : true));
     },
     dispatch

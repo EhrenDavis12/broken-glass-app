@@ -19,24 +19,24 @@ class RateTag extends React.PureComponent {
     //this.Label = props.Label;
   }
 
-  InputType = ()=>{
-    switch(this.props.Type){
-    case "Text":
-     return (<InputText 
-      ReadOnly={this.props.ReadOnly} 
-      Text={this.props.Text} 
-      RatingFor={this.props.RatingFor} 
-      onChangeComment={this.props.onChangeComment}
-      />);
+  InputType = () => {
+    switch (this.props.Type) {
+      case "Text":
+        return (<InputText
+          ReadOnly={this.props.ReadOnly}
+          Text={this.props.Text}
+          RatingFor={this.props.RatingFor}
+          onChangeComment={this.props.onChangeComment}
+        />);
 
-     case "DropDown":
-     return (<InputDropdown 
-      ReadOnly={this.props.ReadOnly} 
-      Text={this.props.Text} 
-      RatingFor={this.props.RatingFor} 
-      onChangeComment={this.props.onChangeComment}
-      DropDownOptions={this.props.DropDownOptions}
-      />)
+      case "DropDown":
+        return (<InputDropdown
+          ReadOnly={this.props.ReadOnly}
+          Text={this.props.Text}
+          RatingFor={this.props.RatingFor}
+          onChangeComment={this.props.onChangeComment}
+          DropDownOptions={this.props.DropDownOptions}
+        />)
 
     }
   };
@@ -46,18 +46,18 @@ class RateTag extends React.PureComponent {
   render() {
 
     return (
-      <div className='row'>
-        <div className="col-sm-2">
+      <div className='row my-1'>
+        <div className="col-md-3">
           <label>{this.props.Label} </label>
         </div>
-        <div className='col-sm-8'>
-        {this.InputType()}
-        {/* <InputText ReadOnly={this.props.ReadOnly} Text={this.props.Text} /> */}
+        <div className='col-sm-4'>
+          <RatingBar Rating={this.props.Rating} ReadOnly={this.props.ReadOnly} onClick={this.props.onClickRating} RatingFor={this.props.RatingFor} />
         </div>
-        <div className='col-sm-2'>
-          <RatingBar Rating={this.props.Rating} ReadOnly={this.props.ReadOnly} onClick={this.props.onClickRating} RatingFor={this.props.RatingFor}/>
+        <div className='col-md-5'>
+          {this.InputType()}
+          {/* <InputText ReadOnly={this.props.ReadOnly} Text={this.props.Text} /> */}
         </div>
-        
+
       </div>
     );
   }
