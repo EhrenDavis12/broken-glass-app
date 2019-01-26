@@ -108,9 +108,7 @@ export class RatingBox extends React.Component {
 		const review = {
 			company: {
 				id: this.props.storeId,
-				companyName: this.props.storeName,
-				averageRating: 0,
-				reviewCount: 0
+				companyName: this.props.storeName
 			},
 
 			review: {
@@ -125,7 +123,6 @@ export class RatingBox extends React.Component {
 				customerRating: this.state.customerRating,
 				overallComment: this.state.overallComment,
 				overallRating: this.state.overallRating,
-				CompanyId: this.props.storeId,
 				JobTypeId: this.state.JobTypeId,
 				PayTypeId: this.state.PayTypeId
 			}
