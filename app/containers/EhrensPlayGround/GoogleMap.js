@@ -62,6 +62,7 @@ const MyMapComponent = compose(
 					<Marker
 						key={i}
 						onClick={() => props.callBack(place)}
+						animation={google.maps.Animation.DROP}
 						position={{
 							lat: place.geometry.location.lat(),
 							lng: place.geometry.location.lng()
