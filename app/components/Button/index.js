@@ -9,8 +9,8 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types';
 // import PropTypes from 'prop-types';
 // import styled from 'styled-components';
-import A from './A';
-import StyledButton from './StyledButton';
+import { A, ADark } from './A';
+import { StyledButton, StyledButtonDark } from './StyledButton';
 import Wrapper from './Wrapper';
 
 function Button(props) {
@@ -25,18 +25,45 @@ function Button(props) {
     </StyledButton>
   );
 
+  if (props.style === "dark") {
+    button = (
+      <StyledButtonDark
+        href={props.href}
+        onClick={props.onClick}
+        style={{ display: props.ReadOnly ? 'none' : 'block' }}
+        data-toggle={props.toggle}
+      >
+        {props.children}
+      </StyledButtonDark>
+    );
+  }
+
 
   if (props.handleRoute) {
-    button = (
-      <Link to={props.href}>
-        <A
-          href={props.href}
-        >
-          {props.children}
-        </A>
 
-      </Link>
-    );
+    if (props.style === "dark") {
+      button = (
+        <Link to={props.href}>
+          <ADark
+            href={props.href}
+          >
+            {props.children}
+          </ADark>
+
+        </Link>
+      );
+    } else {
+      button = (
+        <Link to={props.href}>
+          <A
+            href={props.href}
+          >
+            {props.children}
+          </A>
+
+        </Link>
+      );
+    }
   }
 
   return button;

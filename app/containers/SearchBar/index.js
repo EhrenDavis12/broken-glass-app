@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 import { changeCurrentSearch } from './actions';
 import injectSaga from 'utils/injectSaga';
@@ -27,25 +27,37 @@ export class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     //this.state = {searchValue: props.currentSearch}
+    this.state = { redirect: false }
   }
 
   componentDidMount() {
-
+    this.setState({ redirect: false });
   }
 
-  TextChange = (event) => {
-    //this.setState({searchValue: event.target.value});
-    dispatch(setCurrentSearch(event.target.value));
+  onKeyPress = evt => {
+    if (evt.key === 'Enter') {
+      this.setState({ redirect: true });
+    }
   }
+  /*   TextChange = (event) => {
+      //this.setState({searchValue: event.target.value});
+      dispatch(setCurrentSearch(event.target.value));
+    } */
 
 
   render() {
-    const { currentSearch, onChangeCurrentSearch, onClickButton } = this.props;
-    const {button} = {...messages};
+    const { currentSearch, onChangeCurrentSearch, onClickButton, onKeyPress } = this.props;
+    const { button } = { ...messages };
+
+    if (this.state.redirect) {
+      this.setState({redirect:false});
+      return (<Redirect to='/results' />)
+    }
     return (
       <div>
         <TextBox
           handelInputChange={onChangeCurrentSearch}
+          onKeyPress={this.onKeyPress}
           PlaceHolder={<FormattedMessage {...messages.searchLabel}
             TextValue={currentSearch} />} />
         <Button href='/results' handleRoute={onClickButton}>{button.defaultMessage}</Button>
@@ -59,6 +71,7 @@ SearchBar.propTypes = {
   currentSearch: PropTypes.string,
   onChangeCurrentSearch: PropTypes.func,
   onClickButton: PropTypes.func,
+  onKeyPress: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -72,8 +85,8 @@ function mapDispatchToProps(dispatch) {
     dispatch,
     onClickButton: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      //window.location.replace("/results");
-    }
+    },
+
   };
 }
 

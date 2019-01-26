@@ -14,7 +14,6 @@ import PropTypes from 'prop-types';
 class RatingBoxes extends React.Component {
   render() {
     const { Reviews } = { ...this.props };
-    console.log(Reviews);
     if (Reviews === null || Reviews.length <= 0) {
       return (<h1>No Reviews</h1>);
     }

@@ -6,7 +6,15 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-// import styled from 'styled-components';
+import styled from 'styled-components';
+
+const Glass = styled.img`
+border-style:solid;
+border-width:1px;
+border-color:black;
+margin-left:5px;
+`;
+
 function Star(props) {
   let color = "";
   let onClick = (id)=>{}
@@ -24,11 +32,11 @@ function Star(props) {
   }
 
   return (
-      <img 
+      <Glass 
         height='20px' 
         width='20px' 
         onClick={Click}
-        className='border mx-1' style={{backgroundColor:color}} 
+        style={{backgroundColor:color}} 
         src={require(`../../images/${'BGIcon'}.png`)} 
         alt=""
       />

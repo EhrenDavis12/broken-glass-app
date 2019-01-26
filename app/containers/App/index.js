@@ -9,6 +9,7 @@
 
 import React, { Component } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
+import styled from 'styled-components';
 
 import HomePage from "containers/HomePage/Loadable";
 import ResultPage from 'containers/ResultPage/Loadable';
@@ -24,8 +25,20 @@ import PrivateRoute from "containers/Auth/PrivateRoute";
 import PublicRoute from "containers/Auth/PublicRoute";
 import AuthContext from "containers/Auth/AuthContext";
 import Callback from "containers/EhrensPlayGround/Callback";
+import pic from "../../images/bar.jpg";
 
 import GlobalStyle from "../../global-styles";
+
+const Wrapper = styled.section`
+	background: black;
+	height: 100vh;
+	overflow-y:auto;
+	background-image: url(${pic});
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+	background-position: center; 
+	background-size:cover;
+`;
 
 //export default function App() {
 class App extends Component {
@@ -47,28 +60,30 @@ class App extends Component {
 		const { auth } = this.state;
 		if (!this.state.tokenRenewalComplete) return "Loading...";
 		return (
-			<AuthContext.Provider value={auth}>
-				<PublicRoute component={Nav} />
-				<div className="body">
-					<Switch>
-						<PublicRoute exact path="/" component={HomePage} />
-						<PublicRoute path="/results" component={ResultPage} />
-						<PublicRoute exact path="/callback" component={Callback} />
-						<PrivateRoute exact path="/profile" component={Profile} />
-						<Route path="/api/v1/public" component={Public} />
-						<PrivateRoute exact path="/api/v1/private" component={Private} />
-						<PrivateRoute
-							exact
-							path="/api/v1/review"
-							component={Review}
-							scopes={["read:review"]}
-						/>
-						<PrivateRoute exact path="/api/v1/admin" component={Admin} />
-						<Route component={NotFoundPage} />
-					</Switch>
-					<GlobalStyle />
-				</div>
-			</AuthContext.Provider>
+			<Wrapper>
+				<AuthContext.Provider value={auth}>
+					<PublicRoute component={Nav} />
+					<div className="body">
+						<Switch>
+							<PublicRoute exact path="/" component={HomePage} />
+							<PublicRoute path="/results" component={ResultPage} />
+							<PublicRoute exact path="/callback" component={Callback} />
+							<PrivateRoute exact path="/profile" component={Profile} />
+							<Route path="/api/v1/public" component={Public} />
+							<PrivateRoute exact path="/api/v1/private" component={Private} />
+							<PrivateRoute
+								exact
+								path="/api/v1/review"
+								component={Review}
+								scopes={["read:review"]}
+							/>
+							<PrivateRoute exact path="/api/v1/admin" component={Admin} />
+							<Route component={NotFoundPage} />
+						</Switch>
+						<GlobalStyle />
+					</div>
+				</AuthContext.Provider>
+			</Wrapper>
 		);
 	}
 }

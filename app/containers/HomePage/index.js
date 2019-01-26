@@ -12,16 +12,20 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import SearchBar from "containers/SearchBar/Loadable";
+import { StyledHomePage } from "./StyledHomePage";
+import styled from 'styled-components';
+import LOGO from "../../images/BGLogo.png";
 import messages from './messages';
+
+
 
 /* eslint-disable react/prefer-stateless-function */
 export default class HomePage extends React.PureComponent {
   render() {
     return (
-      <div className='container jumbotron text-center'>
-        <h1>
-          <FormattedMessage {...messages.header} />
-        </h1>
+      <div className='text-center'>
+        
+        <img src={LOGO} style={{width:600, marginBottom:50, marginTop: 30}}/>
         <SearchBar />
       </div>
     );
