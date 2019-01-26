@@ -63,6 +63,7 @@ export class ResultPage extends React.Component {
   }
 
   componentDidMount() {
+    this.props.setToggleModal();
     let api = "/api/v1/jobs";
     fetch(`${process.env.REACT_APP_API_URL}${api}`)
       .then(response => {
@@ -198,6 +199,7 @@ ResultPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   showModal: PropTypes.bool,
   onToggleModal: PropTypes.func,
+  setToggleModal: PropTypes.func,
   apiFindOneReview: PropTypes.func,
   search: PropTypes.string
 };
@@ -213,7 +215,10 @@ function mapDispatchToProps(dispatch) {
     onToggleModal: evt => {
       dispatch(toggleModal(evt.target.dataset.toggle === "true" ? false : true));
     },
-    dispatch
+    dispatch,
+    setToggleModal: flag =>{
+      dispatch(toggleModal(false));
+    }
   };
 }
 

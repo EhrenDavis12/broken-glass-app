@@ -143,6 +143,7 @@ export class RatingBox extends React.Component {
 				},
 				body: JSON.stringify(review)
 			}).then(response => {
+				console.log(response);
 				if (response.ok) return response.json();
 				throw new Error("Network response was not ok.");
 			});
