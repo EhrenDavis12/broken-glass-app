@@ -59,6 +59,8 @@ export class ResultPage extends React.Component {
       PayDropDownOptions: null,
       JobDropDownOptions: null,
       selection: null,
+      averageRating: null,
+      reviewCount: null,
     };
   }
 
@@ -98,15 +100,32 @@ export class ResultPage extends React.Component {
         console.log(error);
       });
   }
+  
+  fetchCompany = () =>{
+    fetch(`${process.env.REACT_APP_API_URL}/api/v1/company/${this.state.selection.place_id}`)
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(res => {
+        console.log(res);
+        this.setState({ averageRating: res[0].averageRating, reviewCount: res[0].reviewCount });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
-  loadReviews = ( multi ) => {
+  loadReviews = (multi) => {
     const store = this.state.selection.place_id;
+    this.fetchCompany();
     let api = "/api/v1/onereview/";
-    let allFlg = multi === undefined? true : false;
+    let allFlg = multi;
     if (allFlg) {
       //set the search for all
       api = "/api/v1/allreviews/";
     }
+    
     fetch(`${process.env.REACT_APP_API_URL}${api}${store}`)
       .then(response => {
         if (response.ok) return response.json();
@@ -135,7 +154,7 @@ export class ResultPage extends React.Component {
     this.loadReviews(false);
   };
 
-  loadAll = () =>{
+  loadAll = () => {
     this.loadReviews(true);
   }
 
@@ -169,14 +188,25 @@ export class ResultPage extends React.Component {
           <Container hidden={this.state.selection === null}>
             <img src={this.state.selection === null ? "" : this.state.selection.icon} />
             <Title>{this.state.selection === null ? "" : this.state.selection.name}</Title>
-            {/* <p>{this.state.selection === null ? "" : this.state.selection.id}</p>
-            <p>{this.state.selection === null ? "" : this.state.selection.place_id}</p> */}
             <p>Address: {this.state.selection === null ? "" : this.state.selection.vicinity}</p>
-            <p>Google Reviews: {this.state.selection === null ? 0 : this.state.selection.user_ratings_total}</p>
+            <div className='row'>
+              <div className='col-md-6'>
+                <p>Employee Rating</p>
+                <p>Reviews Count {this.state.reviewCount === null ? 0 : this.state.reviewCount}</p>
+                <RatingBar
+                  Rating={this.state.averageRating === null ? 0 : this.state.averageRating}
+                  ReadOnly={true} />
+              </div>
+              <div className='col-md-6'>
+                <p>Google Rating</p>
+                <p>Reviews Count: {this.state.selection === null ? 0 : this.state.selection.user_ratings_total}</p>
+                <RatingBar
+                  Rating={this.state.selection === null ? 0 : this.state.selection.rating}
+                  ReadOnly={true} />
+              </div>
+            </div>
 
-            <RatingBar
-              Rating={this.state.selection === null ? 0 : this.state.selection.rating}
-              ReadOnly={true} />
+
             <Button className='mt-1' hidden={loggedOut} onClick={this.props.onToggleModal} toggle={this.props.showModal} style='dark' >
               Rate for Yourself
 					  </Button>
@@ -216,7 +246,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(toggleModal(evt.target.dataset.toggle === "true" ? false : true));
     },
     dispatch,
-    setToggleModal: flag =>{
+    setToggleModal: flag => {
       dispatch(toggleModal(false));
     }
   };

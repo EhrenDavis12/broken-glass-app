@@ -30,6 +30,7 @@ const MyMapComponent = compose(
 				refs.map = ref;
 			},
 			fetchPlaces: ({ updatePlaces }) => searchPlace => {
+				
 				const bounds = refs.map.getBounds();
 				const service = new google.maps.places.PlacesService(
 					refs.map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
@@ -51,7 +52,7 @@ const MyMapComponent = compose(
 )(props => {
 	return (
 		<GoogleMap
-			/* onTilesLoaded={props.fetchPlaces} */
+			onTilesLoaded={() => props.fetchPlaces(props.searchPlace)}
 			ref={props.onMapMounted}
 			onBoundsChanged={() => props.fetchPlaces(props.searchPlace)}
 			defaultZoom={8}
