@@ -37,6 +37,9 @@ export class SearchBar extends React.Component {
   onKeyPress = evt => {
     if (evt.key === 'Enter') {
       this.setState({ redirect: true });
+      if(this.props.onEnter !== undefined) {
+        this.props.onEnter();
+      }
     }
   }
   /*   TextChange = (event) => {
@@ -59,7 +62,7 @@ export class SearchBar extends React.Component {
             onKeyPress={this.onKeyPress}
             PlaceHolder={<FormattedMessage {...messages.searchLabel}
               TextValue={currentSearch} />} />
-          <Button href='/results' handleRoute={onClickButton}>{button.defaultMessage}</Button>
+          <Button href='/results' onEnter={this.props.onEnter} handleRoute={onClickButton}>{button.defaultMessage}</Button>
         </div>
       );
     }

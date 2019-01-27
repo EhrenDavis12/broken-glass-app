@@ -31,7 +31,6 @@ const MyMapComponent = compose(
 			},
 			fetchPlaces: ({ updatePlaces }) => (searchPlace, runSearch) => {
 				if (!runSearch) return;
-				debugger;
 				const bounds = refs.map.getBounds();
 				const service = new google.maps.places.PlacesService(
 					refs.map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED

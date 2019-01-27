@@ -56,7 +56,8 @@ export class ResultPage extends React.Component {
 			response: null,
 			PayDropDownOptions: null,
 			JobDropDownOptions: null,
-			selection: null
+			selection: null,
+			reSearch: false,
 		};
 	}
 
@@ -147,6 +148,23 @@ export class ResultPage extends React.Component {
 		);
 	};
 
+	
+
+	displayMapReSearch = () => {
+		this.setState({reSearch:false});
+		return (
+			<MapContainer
+				searchPlace={this.props.search}
+				callBack={this.loadMapResults}
+				runSearch={true}
+			/>
+		);
+	};
+
+	toggleReSearch = () =>{
+		this.setState({reSearch: true});
+	}
+
 	render() {
 		const { resultsPage, showModal, onToggleModal, reviews, search } = this.props;
 		const loggedOut = !this.props.auth.isAuthenticated();
@@ -167,9 +185,9 @@ export class ResultPage extends React.Component {
 
 				<div className="container">
 					<div className="text-right mb-3">
-						<SearchBar />
+						<SearchBar onEnter={this.toggleReSearch} />
 					</div>
-					{this.displayMap()}
+					{this.state.reSearch? this.displayMapReSearch() : this.displayMap()}
 					<Container hidden={this.state.selection === null}>
 						<img
 							src={this.state.selection === null ? "" : this.state.selection.icon}
