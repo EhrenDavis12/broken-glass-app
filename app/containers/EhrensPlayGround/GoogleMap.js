@@ -29,7 +29,9 @@ const MyMapComponent = compose(
 			onMapMounted: () => ref => {
 				refs.map = ref;
 			},
-			fetchPlaces: ({ updatePlaces }) => searchPlace => {
+			fetchPlaces: ({ updatePlaces }) => (searchPlace, runSearch) => {
+				if (!runSearch) return;
+				debugger;
 				const bounds = refs.map.getBounds();
 				const service = new google.maps.places.PlacesService(
 					refs.map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
@@ -49,11 +51,12 @@ const MyMapComponent = compose(
 		};
 	})
 )(props => {
+	props.fetchPlaces(props.searchPlace, props.runSearch);
 	return (
 		<GoogleMap
 			/* onTilesLoaded={props.fetchPlaces} */
 			ref={props.onMapMounted}
-			onBoundsChanged={() => props.fetchPlaces(props.searchPlace)}
+			onBoundsChanged={() => props.fetchPlaces(props.searchPlace, true)}
 			defaultZoom={8}
 			defaultCenter={{ lat: 33.448376, lng: -112.074036 }}
 		>
@@ -79,6 +82,7 @@ export default class MyFancyComponent extends React.PureComponent {
 			<MyMapComponent
 				searchPlace={this.props.searchPlace}
 				callBack={this.props.callBack}
+				runSearch={this.props.runSearch}
 			/>
 		);
 	}
