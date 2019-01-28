@@ -20,15 +20,16 @@ display: none;
 `; */
 const modalMain = css`
 position:fixed;
-  background: gray;
+  background: #b3b3aa;
   color: black;
   width: 60%;
-  height: 80%;
+  height: 70%;
   top:50%;
   left:50%;
   transform: translate(-50%,-50%);
   z-index: 1;
   overflow-y:auto;
+  padding: 10px;
 `;
 
 //export default modalMain;

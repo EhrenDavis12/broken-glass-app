@@ -6,8 +6,23 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-// import styled from 'styled-components';
+import styled from 'styled-components';
 
+const Option = styled.option`
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+background: gray;
+`;
+const Select = styled.select`
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+background: #b3b3aa;
+display: inline-block;
+  box-sizing: border-box;
+  padding: 0.25em .5em;
+  text-decoration: none;
+  border-radius: 4px;
+  border: 1px solid white;
+width:100%;
+`;
 
 function InputDropdown(props) {
 
@@ -18,10 +33,10 @@ function InputDropdown(props) {
   const dropDownOptions = () => props.DropDownOptions.map(opt => (<option key={opt.id} value={opt.Id}>{opt.Text}</option>))
 
   return (
-    <select disabled={props.ReadOnly} onChange={onChange}>
-    <option value={0}>Pick one</option>
+    <Select disabled={props.ReadOnly} onChange={onChange}>
+    <Option value={0}>Pick one</Option>
     {dropDownOptions()}
-    </select>
+    </Select>
   );
 }
 

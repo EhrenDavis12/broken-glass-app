@@ -21,6 +21,13 @@ const buttonStyles = css`
     background: #616160;
     color: white;
   }
+
+  &:.disabled {
+    background:#c9c9c9;
+    color:#41413e;
+    cursor: not-allowed;
+  }
+  
 `;
 
 const buttonStylesDark = css`
@@ -43,6 +50,12 @@ const buttonStylesDark = css`
   &:active {
     background: #616160;
     color: white;
+  }
+
+  &:.disabled {
+    background:#c9c9c9;
+    color:#41413e;
+    cursor: not-allowed;
   }
 `;
 

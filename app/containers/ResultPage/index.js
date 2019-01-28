@@ -65,6 +65,7 @@ export class ResultPage extends React.Component {
 
   componentDidMount() {
     this.props.setToggleModal();
+    
     let api = "/api/v1/jobs";
     fetch(`${process.env.REACT_APP_API_URL}${api}`)
       .then(response => {
@@ -195,6 +196,8 @@ export class ResultPage extends React.Component {
             storeId={this.state.selection === null ? "" : this.state.selection.place_id}
             JobDropDownOptions={this.state.JobDropDownOptions}
             PayDropDownOptions={this.state.PayDropDownOptions}
+            onSubmit = {this.props.setToggleModal}
+            reload = {this.loadReviews}
           />
         </Modal>
 
@@ -265,7 +268,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(toggleModal(evt.target.dataset.toggle === "true" ? false : true));
     },
     dispatch,
-    setToggleModal: flag => {
+    setToggleModal: () => {
       dispatch(toggleModal(false));
     }
   };

@@ -7,7 +7,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
-// import styled from 'styled-components';
+import styled from 'styled-components';
+
+const NAV = styled.nav`
+
+`;
 
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
@@ -28,6 +32,25 @@ function Nav(props) {
         <Link to="/">Home</Link>
       </li>
       <li>
+        <button onClick={isAuthenticated() ? logout : login}>
+          {isAuthenticated() ? 'Logout' : 'Login'}
+        </button>
+      </li>
+      
+    </ul>
+  </nav>
+  );
+  return nav;
+}
+
+Nav.propTypes = {
+  auth: PropTypes.object,
+};
+
+export default Nav;
+
+/*
+      <li>
         <Link to="/profile">Profile</Link>
       </li>
       <li>
@@ -47,21 +70,4 @@ function Nav(props) {
         <li>
           <Link to="/api/v1/admin">Admin</Link>
         </li>
-      )}
-      <li>
-        <button onClick={isAuthenticated() ? logout : login}>
-          {isAuthenticated() ? 'Logout' : 'Login'}
-        </button>
-      </li>
-      
-    </ul>
-  </nav>
-  );
-  return nav;
-}
-
-Nav.propTypes = {
-  auth: PropTypes.object,
-};
-
-export default Nav;
+      )} */

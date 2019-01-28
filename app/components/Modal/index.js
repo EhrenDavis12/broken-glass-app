@@ -28,6 +28,7 @@ function Modal(props) {
           <div className="container">
             <Button toggle={true} onClick={props.onClick}>Close</Button>
             <h1>Your Rating</h1>
+            <p>Please fill out Job Type, Pay Type, Over all Rating and comment to submit</p>
             {props.children}
           </div>
         </StyledModalMain>

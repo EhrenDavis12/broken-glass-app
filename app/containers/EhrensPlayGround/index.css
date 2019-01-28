@@ -11,7 +11,7 @@ body {
 h1,
 h2,
 h3 {
-  color: #f0582a;
+  color: gray;
 }
 
 button {
@@ -25,11 +25,12 @@ ul.unstyled {
 }
 
 nav ul {
+  opacity: .8;
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-image: linear-gradient(to bottom right, #f0582a, #eb0685);
+  background-image: linear-gradient(to bottom right, gray, gray);
 }
 
 nav li {
@@ -45,7 +46,8 @@ nav li a {
 }
 
 nav li a:hover {
-  background-color: #d9390d;
+  background-color: #6d6c6c;
+  color: white;
 }
 
 nav button {

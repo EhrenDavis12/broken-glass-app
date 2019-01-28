@@ -27,6 +27,7 @@ export class RatingBox extends React.Component {
 		super(props);
 		this.state = {
 			userid: "",
+			reviewValid: false,
 			JobTypeId: props.Review !== undefined ? props.Review.JobTypeId : "",
 			PayTypeId: props.Review !== undefined ? props.Review.PayTypeId : "",
 
@@ -48,6 +49,15 @@ export class RatingBox extends React.Component {
 		};
 	}
 
+	ValidateReview = () => {
+		console.log(`this.state.JobTypeId  this.state.PayTypeId this.state.overallComment  this.state.overallRating`);
+		if (this.state.JobTypeId !== 0 && this.state.PayTypeId !== 0 && this.state.overallComment !== "" && this.state.overallRating !== 0) {
+			this.setState({ reviewValid: true })
+		}
+		else {
+			this.setState({ reviewValid: false })
+		}
+	}
 	componentDidMount() {
 		if (this.props.auth !== undefined) {
 			this.props.auth.getProfile((profile, error) => {
@@ -80,6 +90,7 @@ export class RatingBox extends React.Component {
 				this.setState({ overallComment: UserComment });
 				break;
 		}
+		this.ValidateReview();
 	};
 
 	onClickRating = (Rating, Type) => {
@@ -100,9 +111,11 @@ export class RatingBox extends React.Component {
 				this.setState({ overallRating: Rating });
 				break;
 		}
+		this.ValidateReview();
 	};
 
 	Submit = evt => {
+		
 		evt.preventDefault();
 
 		const review = {
@@ -128,11 +141,11 @@ export class RatingBox extends React.Component {
 			}
 		};
 		this.PostReview(review);
+		this.props.onSubmit();
 	};
 
 	PostReview = review => {
 		try {
-			console.log(JSON.stringify(review));
 			const accessToken = this.props.auth.getAccessToken();
 
 			fetch(`${process.env.REACT_APP_API_URL}/api/v1/review`, {
@@ -143,8 +156,10 @@ export class RatingBox extends React.Component {
 				},
 				body: JSON.stringify(review)
 			}).then(response => {
-				console.log(response);
-				if (response.ok) return;
+				if (response.ok) {
+					this.props.reload(true);
+					return;
+				}
 				throw new Error("Network response was not ok.");
 			});
 		} catch (error) {
@@ -152,11 +167,21 @@ export class RatingBox extends React.Component {
 		}
 	};
 
+	renderButton = () => {
+
+		if (!this.props.ReadOnly) {
+			return (<Button className={!this.state.reviewValid ? 'disabled' : ''} onClick={!this.state.reviewValid ? ()=>{} : this.Submit}>Submit</Button>);
+		}
+		else {
+			return (<></>);
+		}
+	}
+
 	render() {
 		const { ReadOnly } = { ...this.props };
 		return (
 			<div>
-				<form className="border p-2">
+				<div className="border p-2">
 					<RateTag
 						Label="Job Types "
 						Text={this.state.JobTypeId}
@@ -166,6 +191,7 @@ export class RatingBox extends React.Component {
 						onChangeComment={this.onChangeUserComment}
 						RatingFor="JOBTYPE"
 						DropDownOptions={this.props.JobDropDownOptions}
+						HideRatingBar={true}
 					/>
 					<RateTag
 						Label="Pay Types "
@@ -175,6 +201,7 @@ export class RatingBox extends React.Component {
 						ReadOnly={ReadOnly}
 						RatingFor="PAYTYPE"
 						DropDownOptions={this.props.PayDropDownOptions}
+						HideRatingBar={true}
 					/>
 					<RateTag
 						Label="Average Shift $ "
@@ -185,6 +212,7 @@ export class RatingBox extends React.Component {
 						onClickRating={this.onClickRating}
 						onChangeComment={this.onChangeUserComment}
 						RatingFor="AVERAGE"
+						HideRatingBar={false}
 					/>
 					<RateTag
 						Label="Management "
@@ -195,6 +223,7 @@ export class RatingBox extends React.Component {
 						onClickRating={this.onClickRating}
 						onChangeComment={this.onChangeUserComment}
 						RatingFor="MANAGEMENT"
+						HideRatingBar={false}
 					/>
 					<RateTag
 						Label="Busy "
@@ -205,6 +234,7 @@ export class RatingBox extends React.Component {
 						onClickRating={this.onClickRating}
 						onChangeComment={this.onChangeUserComment}
 						RatingFor="BUSY"
+						HideRatingBar={false}
 					/>
 					<RateTag
 						Label="Customers "
@@ -215,6 +245,7 @@ export class RatingBox extends React.Component {
 						onClickRating={this.onClickRating}
 						onChangeComment={this.onChangeUserComment}
 						RatingFor="CUSTOMERS"
+						HideRatingBar={false}
 					/>
 					<RateTag
 						Label="Over All "
@@ -225,9 +256,10 @@ export class RatingBox extends React.Component {
 						onClickRating={this.onClickRating}
 						onChangeComment={this.onChangeUserComment}
 						RatingFor="OVERALL"
+						HideRatingBar={false}
 					/>
-					{ReadOnly ? <></> : <Button onClick={this.Submit}>Submit</Button>}
-				</form>
+					{this.renderButton()}
+				</div>
 			</div>
 		);
 	}
