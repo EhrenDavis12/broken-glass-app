@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { createStructuredSelector } from "reselect";
 import { compose } from "redux";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 import Footer from "components/Footer/index";
 import Button from "components/Button/index";
@@ -24,10 +24,10 @@ import injectSaga from "utils/injectSaga";
 import injectReducer from "utils/injectReducer";
 import { toggleModal, setReviews } from "./actions";
 import {
-  makeSelectResultPage,
-  makeToggleModal,
-  makeSetReviews,
-  makeSelectSearch
+	makeSelectResultPage,
+	makeToggleModal,
+	makeSetReviews,
+	makeSelectSearch
 } from "./selectors";
 import reducer from "./reducer";
 import saga from "./saga";
@@ -35,20 +35,18 @@ import messages from "./messages";
 import MapContainer from "containers/EhrensPlayGround/GoogleMap";
 import { debug } from "util";
 
-
 const Container = styled.div`
-opacity: 0.8;
-background-color:#f5f5f0;
-margin-top: 25px;
-padding: 8px;
+	opacity: 0.8;
+	background-color: #f5f5f0;
+	margin-top: 25px;
+	padding: 8px;
 `;
 
 const Title = styled.h1`
-size:6em;
-color:black;
-weight: bold;
+	size: 6em;
+	color: black;
+	weight: bold;
 `;
-
 
 /* eslint-disable react/prefer-stateless-function */
 export class ResultPage extends React.Component {
@@ -61,6 +59,7 @@ export class ResultPage extends React.Component {
       selection: null,
       averageRating: null,
       reviewCount: null,
+			reSearch: false,
     };
   }
 
@@ -160,9 +159,28 @@ export class ResultPage extends React.Component {
 
   displayMap = () => {
     return (
-      <MapContainer searchPlace={this.props.search} callBack={this.loadMapResults} />
-    );
-  };
+      <MapContainer
+				searchPlace={this.props.search}
+				callBack={this.loadMapResults}
+				runSearch={false}
+			/>
+		);
+	};
+
+	displayMapReSearch = () => {
+		this.setState({reSearch:false});
+		return (
+			<MapContainer
+				searchPlace={this.props.search}
+				callBack={this.loadMapResults}
+				runSearch={true}
+			/>
+		);
+	};
+
+	toggleReSearch = () =>{
+		this.setState({reSearch: true});
+	}
 
   render() {
     const { resultsPage, showModal, onToggleModal, reviews, search } = this.props;
@@ -182,22 +200,22 @@ export class ResultPage extends React.Component {
 
         <div className="container">
           <div className="text-right mb-3">
-            <SearchBar />
+            <SearchBar onEnter={this.toggleReSearch} />
           </div>
-          {this.displayMap()}
+          {this.state.reSearch? this.displayMapReSearch() : this.displayMap()}
           <Container hidden={this.state.selection === null}>
             <img src={this.state.selection === null ? "" : this.state.selection.icon} />
             <Title>{this.state.selection === null ? "" : this.state.selection.name}</Title>
             <p>Address: {this.state.selection === null ? "" : this.state.selection.vicinity}</p>
             <div className='row'>
-              <div className='col-md-6'>
+              <div className='col-md-6 text-center'>
                 <p>Employee Rating</p>
                 <p>Reviews Count {this.state.reviewCount === null ? 0 : this.state.reviewCount}</p>
                 <RatingBar
                   Rating={this.state.averageRating === null ? 0 : this.state.averageRating}
                   ReadOnly={true} />
               </div>
-              <div className='col-md-6'>
+              <div className='col-md-6 text-center'>
                 <p>Google Rating</p>
                 <p>Reviews Count: {this.state.selection === null ? 0 : this.state.selection.user_ratings_total}</p>
                 <RatingBar
@@ -222,22 +240,23 @@ export class ResultPage extends React.Component {
       </div>
     );
   }
+
 }
 
 ResultPage.propTypes = {
-  resultPage: PropTypes.any,
-  dispatch: PropTypes.func.isRequired,
-  showModal: PropTypes.bool,
-  onToggleModal: PropTypes.func,
-  setToggleModal: PropTypes.func,
-  apiFindOneReview: PropTypes.func,
-  search: PropTypes.string
+	resultPage: PropTypes.any,
+	dispatch: PropTypes.func.isRequired,
+	showModal: PropTypes.bool,
+	onToggleModal: PropTypes.func,
+	setToggleModal: PropTypes.func,
+	apiFindOneReview: PropTypes.func,
+	search: PropTypes.string
 };
 
 const mapStateToProps = createStructuredSelector({
-  resultPage: makeSelectResultPage(),
-  showModal: makeToggleModal(),
-  search: makeSelectSearch()
+	resultPage: makeSelectResultPage(),
+	showModal: makeToggleModal(),
+	search: makeSelectSearch()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -253,15 +272,15 @@ function mapDispatchToProps(dispatch) {
 }
 
 const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps
+	mapStateToProps,
+	mapDispatchToProps
 );
 
 const withReducer = injectReducer({ key: "resultPage", reducer });
 const withSaga = injectSaga({ key: "resultPage", saga });
 
 export default compose(
-  withReducer,
-  withSaga,
-  withConnect
+	withReducer,
+	withSaga,
+	withConnect
 )(ResultPage);

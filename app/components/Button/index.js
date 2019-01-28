@@ -59,6 +59,7 @@ function Button(props) {
         <Link to={props.href}>
           <A
             href={props.href}
+            onClick={() => props.onEnter !== undefined? props.onEnter() : () => {}}
           >
             {props.children}
           </A>
