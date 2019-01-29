@@ -80,7 +80,7 @@ export class ResultPage extends React.Component {
         this.setState({ JobDropDownOptions: stat });
       })
       .catch(error => {
-        console.log(error);
+        console.debug(error);
       });
 
     api = "/api/v1/pay";
@@ -97,7 +97,7 @@ export class ResultPage extends React.Component {
         this.setState({ PayDropDownOptions: stat });
       })
       .catch(error => {
-        console.log(error);
+        console.debug(error);
       });
   }
   
@@ -108,11 +108,10 @@ export class ResultPage extends React.Component {
         throw new Error("Network response was not ok.");
       })
       .then(res => {
-        console.log(res);
         this.setState({ averageRating: res[0].averageRating, reviewCount: res[0].reviewCount });
       })
       .catch(error => {
-        console.log(error);
+        console.debug(error);
       });
   }
 
@@ -135,7 +134,7 @@ export class ResultPage extends React.Component {
         this.setState({ response: response });
       })
       .catch(error => {
-        console.log(error);
+        console.debug(error);
       });
   };
 

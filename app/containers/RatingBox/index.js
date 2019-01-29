@@ -29,7 +29,9 @@ export class RatingBox extends React.Component {
 			userid: "",
 			reviewValid: false,
 			JobTypeId: props.Review !== undefined ? props.Review.JobTypeId : "",
+			JobTypeDesc: props.Review !== undefined ? props.Review.JobType.JobTypeDescription : "",
 			PayTypeId: props.Review !== undefined ? props.Review.PayTypeId : "",
+			PayTypeDesc: props.Review !== undefined ? props.Review.PayType.PayTypeDescription : "",
 
 			shiftPayComment:
 				props.Review !== undefined ? props.Review.shiftPayComment : "",
@@ -50,7 +52,6 @@ export class RatingBox extends React.Component {
 	}
 
 	ValidateReview = () => {
-		console.log(`this.state.JobTypeId  this.state.PayTypeId this.state.overallComment  this.state.overallRating`);
 		if (this.state.JobTypeId !== 0 && this.state.PayTypeId !== 0 && this.state.overallComment !== "" && this.state.overallRating !== 0) {
 			this.setState({ reviewValid: true })
 		}
@@ -163,7 +164,7 @@ export class RatingBox extends React.Component {
 				throw new Error("Network response was not ok.");
 			});
 		} catch (error) {
-			console.log(error.message);
+			console.debug(error.message);
 		}
 	};
 
@@ -184,7 +185,7 @@ export class RatingBox extends React.Component {
 				<div className="border p-2">
 					<RateTag
 						Label="Job Types "
-						Text={this.state.JobTypeId}
+						Text={this.state.JobTypeDesc}
 						Type={ReadOnly ? "Text" : "DropDown"}
 						ReadOnly={ReadOnly}
 						onClickRating={this.onClickRating}
@@ -195,7 +196,7 @@ export class RatingBox extends React.Component {
 					/>
 					<RateTag
 						Label="Pay Types "
-						Text={this.state.PayTypeId}
+						Text={this.state.PayTypeDesc}
 						Type={ReadOnly ? "Text" : "DropDown"}
 						onChangeComment={this.onChangeUserComment}
 						ReadOnly={ReadOnly}

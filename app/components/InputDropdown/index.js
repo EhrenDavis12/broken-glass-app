@@ -30,7 +30,7 @@ function InputDropdown(props) {
     props.onChangeComment(event.target.value, props.RatingFor);
   }
 
-  const dropDownOptions = () => props.DropDownOptions.map(opt => (<option key={opt.id} value={opt.Id}>{opt.Text}</option>))
+  const dropDownOptions = () => props.DropDownOptions.map((opt,i) => (<option key={opt.id} value={opt.Id}>{opt.Text}</option>))
 
   return (
     <Select disabled={props.ReadOnly} onChange={onChange}>

@@ -30,15 +30,14 @@ color: black;
 class RatingBoxes extends React.Component {
   render() {
     const { Reviews } = { ...this.props };
-    console.log(Reviews);
     if (Reviews === null || Reviews.length <= 0) {
       return (<h1>No Reviews</h1>);
     }
     else {
       return (
         <div>
-          {Reviews.map(review => (
-            <div>
+          {Reviews.map((review,i) => (
+            <div key={i}>
               {/* <p>Posted: {review.createdAt}</p> */}
               <Container>
                 <RatingBox

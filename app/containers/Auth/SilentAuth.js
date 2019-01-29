@@ -13,7 +13,6 @@ export default class Auth {
 		this.history = history;
 		this.userProfile = null;
 		this.requestedScopes = "openid profile email read:review";
-		/* console.log(process.env); */
 		this.auth0 = new auth0.WebAuth({
 			domain: process.env.REACT_APP_AUTH0_DOMAIN,
 			clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
@@ -45,14 +44,13 @@ export default class Auth {
 			} else if (err) {
 				this.history.push("/");
 				alert(`Error: ${err.error}. Check the console for further details.`);
-				console.log(err);
+				console.debug(err);
 			}
 			localStorage.removeItem(REDIRECT_ON_LOGIN);
 		});
 	};
 
 	setSession = authResult => {
-		/* console.log(authResult); */
 		_expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
 
 		_scopes = authResult.scope || this.requestedScopes || "";
@@ -111,7 +109,7 @@ export default class Auth {
 	renewToken = cb => {
 		this.auth0.checkSession({}, (err, result) => {
 			if (err) {
-				console.log(`Error: ${err.error} - ${err.error_description}.`);
+				console.debug(`Error: ${err.error} - ${err.error_description}.`);
 			} else {
 				this.setSession(result);
 			}
