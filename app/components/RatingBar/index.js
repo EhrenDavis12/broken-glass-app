@@ -20,7 +20,10 @@ class RatingBar extends React.Component {
     }
   }
 
-  render() {
+  renderStars = () => {
+    if(this.props.hidden){
+      return (<></>);
+    }
     return (
       <div style={{minWidth: 140}}>
         <Star Id='1' Color={this.props.Rating >= 1 ? '#ffff00': ''} Selected={this.props.Rating >= 1} ReadOnly={this.props.ReadOnly} onClick={this.Click} />
@@ -30,6 +33,10 @@ class RatingBar extends React.Component {
         <Star Id='5' Color={this.props.Rating >= 5 ? '#ffff00': ''} Selected={this.props.Rating >= 5} ReadOnly={this.props.ReadOnly} onClick={this.Click} />
       </div>
     );
+  }
+
+  render() {
+    return this.renderStars();
   }
 }
 

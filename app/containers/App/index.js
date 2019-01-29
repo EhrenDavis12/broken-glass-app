@@ -25,7 +25,7 @@ import PrivateRoute from "containers/Auth/PrivateRoute";
 import PublicRoute from "containers/Auth/PublicRoute";
 import AuthContext from "containers/Auth/AuthContext";
 import Callback from "containers/EhrensPlayGround/Callback";
-import pic from "../../images/bar.jpg";
+import pic from "../../images/bar-black.jpg";
 
 import GlobalStyle from "../../global-styles";
 

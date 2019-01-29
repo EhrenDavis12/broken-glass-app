@@ -29,6 +29,7 @@ const MyMapComponent = compose(
 			onMapMounted: () => ref => {
 				refs.map = ref;
 			},
+
 			fetchPlaces: ({ updatePlaces }) => (searchPlace, runSearch) => {
 				if (!runSearch) return;
 				const bounds = refs.map.getBounds();
@@ -53,7 +54,7 @@ const MyMapComponent = compose(
 	props.fetchPlaces(props.searchPlace, props.runSearch);
 	return (
 		<GoogleMap
-			/* onTilesLoaded={props.fetchPlaces} */
+			onTilesLoaded={() => props.fetchPlaces(props.searchPlace)}
 			ref={props.onMapMounted}
 			onBoundsChanged={() => props.fetchPlaces(props.searchPlace, true)}
 			defaultZoom={8}

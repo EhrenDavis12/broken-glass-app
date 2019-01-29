@@ -50,105 +50,123 @@ const Title = styled.h1`
 
 /* eslint-disable react/prefer-stateless-function */
 export class ResultPage extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			response: null,
-			PayDropDownOptions: null,
-			JobDropDownOptions: null,
-			selection: null,
+  constructor(props) {
+    super(props);
+    this.state = {
+      response: null,
+      PayDropDownOptions: null,
+      JobDropDownOptions: null,
+      selection: null,
+      averageRating: null,
+      reviewCount: null,
 			reSearch: false,
-		};
-	}
+    };
+  }
 
-	componentDidMount() {
-		this.props.setToggleModal();
-		let api = "/api/v1/jobs";
-		fetch(`${process.env.REACT_APP_API_URL}${api}`)
-			.then(response => {
-				if (response.ok) return response.json();
-				throw new Error("Network response was not ok.");
-			})
-			.then(response => {
-				const stat = [];
-				response.forEach(type => {
-					stat.push({ Id: type.id, Text: type.JobTypeDescription });
-				});
-				this.setState({ JobDropDownOptions: stat });
-			})
-			.catch(error => {
-				console.log(error);
-			});
+  componentDidMount() {
+    this.props.setToggleModal();
+    
+    let api = "/api/v1/jobs";
+    fetch(`${process.env.REACT_APP_API_URL}${api}`)
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {
+        const stat = [];
+        response.forEach(type => {
+          stat.push({ Id: type.id, Text: type.JobTypeDescription });
+        });
+        this.setState({ JobDropDownOptions: stat });
+      })
+      .catch(error => {
+        console.log(error);
+      });
 
-		api = "/api/v1/pay";
-		fetch(`${process.env.REACT_APP_API_URL}${api}`)
-			.then(response => {
-				if (response.ok) return response.json();
-				throw new Error("Network response was not ok.");
-			})
-			.then(response => {
-				const stat = [];
-				response.forEach(type => {
-					stat.push({ Id: type.id, Text: type.PayTypeDescription });
-				});
-				this.setState({ PayDropDownOptions: stat });
-			})
-			.catch(error => {
-				console.log(error);
-			});
-	}
+    api = "/api/v1/pay";
+    fetch(`${process.env.REACT_APP_API_URL}${api}`)
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {
+        const stat = [];
+        response.forEach(type => {
+          stat.push({ Id: type.id, Text: type.PayTypeDescription });
+        });
+        this.setState({ PayDropDownOptions: stat });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  
+  fetchCompany = () =>{
+    fetch(`${process.env.REACT_APP_API_URL}/api/v1/company/${this.state.selection.place_id}`)
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(res => {
+        console.log(res);
+        this.setState({ averageRating: res[0].averageRating, reviewCount: res[0].reviewCount });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
-	loadReviews = multi => {
-		const store = this.state.selection.place_id;
-		let api = "/api/v1/onereview/";
-		let allFlg = multi === undefined ? true : false;
-		if (allFlg) {
-			//set the search for all
-			api = "/api/v1/allreviews/";
-		}
-		fetch(`${process.env.REACT_APP_API_URL}${api}${store}`)
-			.then(response => {
-				if (response.ok) return response.json();
-				throw new Error("Network response was not ok.");
-			})
-			.then(response => {
-				this.setState({ response: response });
-			})
-			.catch(error => {
-				console.log(error);
-			});
-	};
+  loadReviews = (multi) => {
+    const store = this.state.selection.place_id;
+    this.fetchCompany();
+    let api = "/api/v1/onereview/";
+    let allFlg = multi;
+    if (allFlg) {
+      //set the search for all
+      api = "/api/v1/allreviews/";
+    }
+    
+    fetch(`${process.env.REACT_APP_API_URL}${api}${store}`)
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {
+        this.setState({ response: response });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
-	loadRatingBox = response => {
-		if (response === null) {
-			return <></>;
-		} else {
-			return response.map(review => {
-				<RatingBox {...review} ReadOnly={true} />;
-			});
-		}
-	};
+  loadRatingBox = response => {
+    if (response === null) {
+      return <></>;
+    } else {
+      return response.map(review => {
+        <RatingBox {...review} ReadOnly={true} />;
+      });
+    }
+  };
 
-	loadMapResults = x => {
-		this.setState({ selection: x });
-		this.loadReviews(false);
-	};
+  loadMapResults = x => {
+    this.setState({ selection: x });
+    this.loadReviews(false);
+  };
 
-	loadAll = () => {
-		this.loadReviews(true);
-	};
+  loadAll = () => {
+    this.loadReviews(true);
+  }
 
-	displayMap = () => {
-		return (
-			<MapContainer
+  displayMap = () => {
+    return (
+      <MapContainer
 				searchPlace={this.props.search}
 				callBack={this.loadMapResults}
 				runSearch={false}
 			/>
 		);
 	};
-
-	
 
 	displayMapReSearch = () => {
 		this.setState({reSearch:false});
@@ -165,74 +183,67 @@ export class ResultPage extends React.Component {
 		this.setState({reSearch: true});
 	}
 
-	render() {
-		const { resultsPage, showModal, onToggleModal, reviews, search } = this.props;
-		const loggedOut = !this.props.auth.isAuthenticated();
-		return (
-			<div>
-				<Modal onClick={onToggleModal} ShowModal={showModal}>
-					<RatingBox
-						ReadOnly={false}
-						auth={this.props.auth}
-						storeName={this.state.selection === null ? "" : this.state.selection.name}
-						storeId={
-							this.state.selection === null ? "" : this.state.selection.place_id
-						}
-						JobDropDownOptions={this.state.JobDropDownOptions}
-						PayDropDownOptions={this.state.PayDropDownOptions}
-					/>
-				</Modal>
+  render() {
+    const { resultsPage, showModal, onToggleModal, reviews, search } = this.props;
+    const loggedOut = !this.props.auth.isAuthenticated();
+    return (
+      <div>
+        <Modal onClick={onToggleModal} ShowModal={showModal}>
+          <RatingBox
+            ReadOnly={false}
+            auth={this.props.auth}
+            storeName={this.state.selection === null ? "" : this.state.selection.name}
+            storeId={this.state.selection === null ? "" : this.state.selection.place_id}
+            JobDropDownOptions={this.state.JobDropDownOptions}
+            PayDropDownOptions={this.state.PayDropDownOptions}
+            onSubmit = {this.props.setToggleModal}
+            reload = {this.loadReviews}
+          />
+        </Modal>
 
-				<div className="container">
-					<div className="text-right mb-3">
-						<SearchBar onEnter={this.toggleReSearch} />
-					</div>
-					{this.state.reSearch? this.displayMapReSearch() : this.displayMap()}
-					<Container hidden={this.state.selection === null}>
-						<img
-							src={this.state.selection === null ? "" : this.state.selection.icon}
-						/>
-						<Title>
-							{this.state.selection === null ? "" : this.state.selection.name}
-						</Title>
-						{/* <p>{this.state.selection === null ? "" : this.state.selection.id}</p>
-            <p>{this.state.selection === null ? "" : this.state.selection.place_id}</p> */}
-						<p>
-							Address:{" "}
-							{this.state.selection === null ? "" : this.state.selection.vicinity}
-						</p>
-						<p>
-							Google Reviews:{" "}
-							{this.state.selection === null
-								? 0
-								: this.state.selection.user_ratings_total}
-						</p>
+        <div className="container">
+          <div className="text-right mb-3">
+            <SearchBar onEnter={this.toggleReSearch} />
+          </div>
+          {this.state.reSearch? this.displayMapReSearch() : this.displayMap()}
+          <Container hidden={this.state.selection === null}>
+            <img src={this.state.selection === null ? "" : this.state.selection.icon} />
+            <Title>{this.state.selection === null ? "" : this.state.selection.name}</Title>
+            <p>Address: {this.state.selection === null ? "" : this.state.selection.vicinity}</p>
+            <div className='row'>
+              <div className='col-md-6 text-center'>
+                <p>Employee Rating</p>
+                <p>Reviews Count {this.state.reviewCount === null ? 0 : this.state.reviewCount}</p>
+                <RatingBar
+                  Rating={this.state.averageRating === null ? 0 : this.state.averageRating}
+                  ReadOnly={true} />
+              </div>
+              <div className='col-md-6 text-center'>
+                <p>Google Rating</p>
+                <p>Reviews Count: {this.state.selection === null ? 0 : this.state.selection.user_ratings_total}</p>
+                <RatingBar
+                  Rating={this.state.selection === null ? 0 : this.state.selection.rating}
+                  ReadOnly={true} />
+              </div>
+            </div>
 
-						<RatingBar
-							Rating={this.state.selection === null ? 0 : this.state.selection.rating}
-							ReadOnly={true}
-						/>
-						<Button
-							className="mt-1"
-							hidden={loggedOut}
-							onClick={this.props.onToggleModal}
-							toggle={this.props.showModal}
-							style="dark"
-						>
-							Rate for Yourself
-						</Button>
 
-						<RatingBoxes Reviews={this.state.response} />
+            <Button className='mt-1' hidden={loggedOut} onClick={this.props.onToggleModal} toggle={this.props.showModal} style='dark' >
+              Rate for Yourself
+					  </Button>
 
-						<Button hidden={loggedOut} onClick={this.loadAll} style="dark">
-							View More
-						</Button>
-					</Container>
-				</div>
-				{/* <Footer /> */}
-			</div>
-		);
-	}
+            <RatingBoxes Reviews={this.state.response} />
+
+            <Button hidden={loggedOut} onClick={this.loadAll} style='dark' >
+              View More
+					  </Button>
+          </Container>
+        </div>
+        {/* <Footer /> */}
+      </div>
+    );
+  }
+
 }
 
 ResultPage.propTypes = {
@@ -252,15 +263,15 @@ const mapStateToProps = createStructuredSelector({
 });
 
 function mapDispatchToProps(dispatch) {
-	return {
-		onToggleModal: evt => {
-			dispatch(toggleModal(evt.target.dataset.toggle === "true" ? false : true));
-		},
-		dispatch,
-		setToggleModal: flag => {
-			dispatch(toggleModal(false));
-		}
-	};
+  return {
+    onToggleModal: evt => {
+      dispatch(toggleModal(evt.target.dataset.toggle === "true" ? false : true));
+    },
+    dispatch,
+    setToggleModal: () => {
+      dispatch(toggleModal(false));
+    }
+  };
 }
 
 const withConnect = connect(
